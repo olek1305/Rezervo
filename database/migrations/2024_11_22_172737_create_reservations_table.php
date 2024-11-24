@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Klucz obcy do użytkownika
-            $table->date('reservation_date'); // Data rezerwacji
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('reservation_date');
+            $table->unique(['user_id', 'reservation_date'], 'unique_user_reservation_date');
             $table->timestamps();
         });
     }

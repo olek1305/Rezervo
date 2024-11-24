@@ -20,4 +20,6 @@ Route::middleware([
     Route::resource('/calendar', CalendarController::class);
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::post('/reservations', [ReservationController::class, 'store']);
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->middleware('auth');
+
 });
