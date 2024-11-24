@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     supervisor
 
 # Installed PHP extensions
-RUN docker-php-ext-install sockets pdo pdo_mysql sodium
+RUN docker-php-ext-install pdo pdo_mysql
 
 # Installed Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
