@@ -183,29 +183,29 @@ onMounted(() => {
 <template>
     <AppLayout title="Dynamiczny Kalendarz z Rezerwacjami">
         <div class="py-12">
-            <div class="max-w-5xl mx-auto px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg">
                     <!-- Header -->
-                    <header class="flex items-center justify-between border-b border-gray-300 px-6 py-4 bg-gray-100">
-                        <h1 class="text-lg font-bold text-gray-700">
+                    <header class="flex flex-col sm:flex-row items-center justify-between border-b border-gray-300 px-6 py-4 bg-gray-100">
+                        <h1 class="text-base sm:text-lg font-bold text-gray-700">
                             <time :datetime="currentDate.toISOString()">{{ formatMonthYear(currentDate) }}</time>
                         </h1>
-                        <div class="flex items-center space-x-4">
+                        <div class="flex flex-wrap items-center space-x-2 sm:space-x-4 mt-2 sm:mt-0">
                             <button
                                 @click="previousMonth"
-                                class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+                                class="px-3 py-2 bg-gray-700 text-white text-sm rounded hover:bg-gray-600"
                             >
                                 Poprzedni miesiąc
                             </button>
                             <button
                                 @click="goToToday"
-                                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+                                class="px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-500"
                             >
                                 Dziś
                             </button>
                             <button
                                 @click="nextMonth"
-                                class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+                                class="px-3 py-2 bg-gray-700 text-white text-sm rounded hover:bg-gray-600"
                             >
                                 Następny miesiąc
                             </button>
@@ -228,7 +228,7 @@ onMounted(() => {
                             v-for="day in days"
                             :key="day.date"
                             :class="[
-                                'flex flex-col justify-between p-4 border rounded-lg text-sm',
+                                'flex flex-col justify-between p-2 sm:p-4 border rounded-lg text-xs sm:text-sm h-20 sm:h-32',
                                 day.isCurrentMonth ? 'bg-white text-gray-900' : 'bg-gray-200 text-gray-500',
                                 day.date.toDateString() === new Date().toDateString() && 'bg-blue-500 text-white',
                                 day.date.getDay() === 0 || day.date.getDay() === 6 ? 'bg-gray-100' : ''
@@ -237,8 +237,8 @@ onMounted(() => {
                         >
                             <span class="font-bold">{{ day.date.getDate() }}</span>
 
-                            <!-- Lista rezerwacji -->
-                            <ul v-if="reservations[formatDate(day.date)]" class="mt-2 text-xs">
+                            <!-- Reservation list -->
+                            <ul v-if="reservations[formatDate(day.date)]" class="mt-1 sm:mt-2 text-xs">
                                 <li
                                     v-for="(reservation, index) in reservations[formatDate(day.date)]"
                                     :key="index"
@@ -248,9 +248,9 @@ onMounted(() => {
                                     <button
                                         v-if="reservation.userId === currentUser.id"
                                         @click.prevent="cancelReservation(reservation.id)"
-                                    class="ml-2 text-red-500 hover:underline"
+                                        class="ml-2 text-red-500 hover:underline"
                                     >
-                                    Anuluj
+                                        Anuluj
                                     </button>
                                 </li>
                             </ul>
