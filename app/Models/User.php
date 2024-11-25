@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -62,6 +64,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => 'string',
         ];
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'user_id');
+    }
+
+    public function doctorCalendars(): HasMany
+    {
+        return $this->hasMany(DoctorCalendar::class, 'doctor_id');
+    }
+
+    public function doctorReservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'doctor_id');
+    }
+
 }

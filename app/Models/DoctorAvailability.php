@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Reservation extends Model
+class DoctorAvailability extends Model
 {
+    use HasFactory;
+
+    protected $table = 'doctor_availability';
+
     protected $fillable = [
         'doctor_id',
-        'user_id',
-        'reservation_date',
-        'reservation_time',
+        'available_date',
+        'start_time',
+        'end_time',
     ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function doctor(): BelongsTo
     {
