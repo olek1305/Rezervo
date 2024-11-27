@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,17 +48,24 @@ class DoctorCalendarController extends Controller
             ->groupBy('reservation_date')
             ->map(fn ($res) => $res->pluck('reservation_time')->toArray());
 
-        $timeSlots = [];
-        foreach ($availability as $slot) {
+        $timeSlots = collect($availability)->mapWithKeys(function ($slot) {
+            $date = (new \DateTime($slot->available_date))->format('Y-m-d');
             $currentTime = new \DateTime($slot->start_time);
             $endTime = new \DateTime($slot->end_time);
 
+            $slots = [];
             while ($currentTime < $endTime) {
-                $formattedTime = $currentTime->format('H:i');
-                $timeSlots[$slot->available_date][] = $formattedTime;
+                $slots[] = $currentTime->format('H:i');
                 $currentTime->modify('+30 minutes');
             }
-        }
+
+            return [$date => $slots];
+        })->toArray();
+
+        $allDates = collect($availability)->pluck('available_date')->map(fn ($date) => (new \DateTime($date))->format('Y-m-d'));
+
+        $timeSlots = $allDates->mapWithKeys(fn ($date) => [$date => $timeSlots[$date] ?? []])->toArray();
+        $reservations = $allDates->mapWithKeys(fn ($date) => [$date => $reservations[$date] ?? []])->toArray();
 
         return Inertia::render('Client/Calendar', [
             'doctorId' => $id,
