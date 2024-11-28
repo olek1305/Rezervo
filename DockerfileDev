@@ -17,9 +17,6 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Installed Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy supervisord configuration file
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 # Setting up the working directory
 WORKDIR /var/www
 
