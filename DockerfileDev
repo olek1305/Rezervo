@@ -39,5 +39,6 @@ RUN chown -R admin:admin /var/www
 # Set the user on which further commands will be executed
 USER admin
 
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Command to run the Laravel application
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
