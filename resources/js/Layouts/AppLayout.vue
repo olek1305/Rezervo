@@ -51,6 +51,15 @@ const logout = () => {
                                 >
                                     Kalendarz lekarza
                                 </NavLink>
+
+                                <!-- Doctor's Calendar and Availability -->
+                                <NavLink
+                                    v-if="$page.props.auth.user.role === 'admin'"
+                                    :href="route('admin.doctors.index')"
+                                    :active="route().current('admin.doctors.index')"
+                                >
+                                    Admin
+                                </NavLink>
                             </div>
                         </div>
 

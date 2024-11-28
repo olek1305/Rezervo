@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDoctorController;
 use App\Http\Controllers\DoctorAvailabilityController;
 use App\Http\Controllers\DoctorCalendarController;
 use App\Http\Middleware\RoleMiddleware;
@@ -40,5 +41,11 @@ Route::middleware([
         Route::get('/doctor/availability', [DoctorAvailabilityController::class, 'index'])->name('doctor.availability');
         Route::post('/doctor/availability', [DoctorAvailabilityController::class, 'store']);
         Route::delete('/doctor/availability/{id}', [DoctorAvailabilityController::class, 'destroy']);
+    });
+
+    Route::middleware(['auth', RoleMiddleware::class . ':admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/doctors', [AdminDoctorController::class, 'index'])->name('doctors.index');
+        Route::post('/doctors/{user}/assign', [AdminDoctorController::class, 'assignRole'])->name('doctors.assign');
+        Route::post('/doctors/{user}/remove', [AdminDoctorController::class, 'removeRole'])->name('doctors.remove');
     });
 });
