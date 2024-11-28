@@ -28,53 +28,53 @@ class ReservationController extends Controller
     }
 
     /**
-     * Store a new reservation.
+     * Book a reservation for a specific doctor and time slot.
      */
     public function store(Request $request): JsonResponse
     {
         $request->validate([
             'doctor_id' => 'required|exists:users,id',
             'reservation_date' => 'required|date|after_or_equal:today',
-            'reservation_time' => 'required|date_format:H:i', // Dodano czas
+            'reservation_time' => 'required|date_format:H:i',
         ]);
 
-        $doctorId = $request->doctor_id;
-        $reservationDate = $request->reservation_date;
-        $reservationTime = $request->reservation_time;
+        $isAvailable = DoctorAvailability::where('doctor_id', $request->doctor_id)
+            ->where('available_date', $request->reservation_date)
+            ->where('start_time', '<=', $request->reservation_time)
+            ->where('end_time', '>=', $request->reservation_time)
+            ->exists();
 
-        // Check if the doctor is available on the selected date
-        $availability = DoctorAvailability::where('doctor_id', $doctorId)
-            ->where('available_date', $reservationDate)
-            ->where('start_time', '<=', $reservationTime)
-            ->where('end_time', '>', $reservationTime) // Sprawdzenie przedziału czasowego
-            ->first();
-
-        if (!$availability) {
-            return response()->json(['error' => 'The doctor is not available on this date and time.'], 400);
+        if (!$isAvailable) {
+            return response()->json(['error' => 'Selected date and time are not available.'], 422);
         }
 
-        // Check if the time slot is already booked
-        $isAlreadyBooked = Reservation::where('doctor_id', $doctorId)
-            ->where('reservation_date', $reservationDate)
-            ->where('reservation_time', $reservationTime)
+        $isAlreadyBooked = Reservation::where('doctor_id', $request->doctor_id)
+            ->where('reservation_date', $request->reservation_date)
+            ->where('reservation_time', $request->reservation_time)
             ->exists();
 
         if ($isAlreadyBooked) {
-            return response()->json(['error' => 'This time slot is already booked.'], 400);
+            return response()->json(['error' => 'This time slot is already booked.'], 422);
         }
 
-        // Create the reservation
+        $isAlreadyBookedByUser = Reservation::where('doctor_id', $request->doctor_id)
+            ->where('user_id', Auth::id())
+            ->where('reservation_date', $request->reservation_date)
+            ->where('reservation_time', $request->reservation_time)
+            ->exists();
+
+        if ($isAlreadyBookedByUser) {
+            return response()->json(['error' => 'You have already booked this time slot.'], 422);
+        }
+
         $reservation = Reservation::create([
-            'doctor_id' => $doctorId,
-            'reservation_date' => $reservationDate,
-            'reservation_time' => $reservationTime,
+            'doctor_id' => $request->doctor_id,
             'user_id' => Auth::id(),
+            'reservation_date' => $request->reservation_date,
+            'reservation_time' => $request->reservation_time,
         ]);
 
-        // Logowanie rezerwacji
-        Log::info('Reservation created:', $reservation->toArray());
-
-        return response()->json($reservation, 201);
+        return response()->json(['message' => 'Reservation created successfully.', 'reservation' => $reservation], 201);
     }
 
     /**

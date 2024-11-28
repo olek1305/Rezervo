@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDoctorController;
 use App\Http\Controllers\DoctorAvailabilityController;
 use App\Http\Controllers\DoctorCalendarController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::middleware([
     // Customer calendar view and bookings
     Route::middleware('auth')->group(function () {
         Route::get('/doctor/{id}/calendar', [DoctorCalendarController::class, 'show'])->name('client.calendar');
-        Route::post('/reservations', [DoctorCalendarController::class, 'book']);
+        Route::post('/reservations', [ReservationController::class, 'store'])->name('reservation.store');
     });
 
     // Management of physician availability
