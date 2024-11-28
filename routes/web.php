@@ -20,7 +20,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // Strona wyboru lekarza
+    // Doctor's Choice Page
     Route::get('/doctors', function () {
         $doctors = User::where('role', 'doctor')->get();
 
@@ -29,17 +29,16 @@ Route::middleware([
         ]);
     })->name('doctor.index');
 
-    // Widok kalendarza klienta i rezerwacje
+    // Customer calendar view and bookings
     Route::middleware('auth')->group(function () {
         Route::get('/doctor/{id}/calendar', [DoctorCalendarController::class, 'show'])->name('client.calendar');
         Route::post('/reservations', [DoctorCalendarController::class, 'book']);
     });
 
-    // Zarządzanie dostępnością lekarza
+    // Management of physician availability
     Route::middleware(['auth', RoleMiddleware::class.':doctor'])->group(function () {
         Route::get('/doctor/availability', [DoctorAvailabilityController::class, 'index'])->name('doctor.availability');
         Route::post('/doctor/availability', [DoctorAvailabilityController::class, 'store']);
         Route::delete('/doctor/availability/{id}', [DoctorAvailabilityController::class, 'destroy']);
     });
-
 });
