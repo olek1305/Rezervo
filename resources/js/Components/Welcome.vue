@@ -3,102 +3,138 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <div>
-        <div class="p-6 lg:p-8 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
-            <ApplicationLogo class="block h-12 w-auto" />
+  <div class="min-h-screen bg-gradient-to-r from-teal-100 to-teal-300 dark:from-teal-800 dark:to-teal-900 text-white flex flex-col items-center">
+    <!-- Sticky Navbar -->
+    <nav class="w-full fixed top-0 left-0 bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 dark:from-teal-700 dark:via-teal-800 dark:to-teal-900 text-white shadow-lg z-10">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+          <a href="#" class="font-bold text-lg">System Rezerwacji</a>
+          <div class="space-x-6">
+            <a href="#features" class="hover:text-teal-200 transition-all">Funkcje</a>
+            <a href="#pricing" class="hover:text-teal-200 transition-all">Cennik</a>
+            <a href="#contact" class="hover:text-teal-200 transition-all">Kontakt
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-            <h1 class="mt-8 text-2xl font-medium text-gray-900 dark:text-white">
-                Welcome to your Jetstream application!
-            </h1>
+    <!-- Hero Section -->
+    <section class="w-full pt-24 pb-16 bg-white dark:bg-gray-900 text-center">
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white animate__animated animate__fadeIn">
+        System rezerwacji
+      </h1>
+      <p class="mt-6 text-xl sm:text-2xl text-gray-600 dark:text-gray-300 opacity-90 animate__animated animate__fadeIn animate__delay-1s">
+        tuuuu potem wpisze cos teraz to mam male nozki
+      </p>
+      <a href="#features" class="mt-8 inline-block bg-teal-600 hover:bg-teal-500 py-4 px-8 rounded-xl text-lg font-semibold text-white transition-all transform hover:scale-105">
+        Rozpocznij teraz
+      </a>
+    </section>
 
-            <p class="mt-6 text-gray-500 dark:text-gray-400 leading-relaxed">
-                Laravel Jetstream provides a beautiful, robust starting point for your next Laravel application. Laravel is designed
-                to help you build your application using a development environment that is simple, powerful, and enjoyable. We believe
-                you should love expressing your creativity through programming, so we have spent time carefully crafting the Laravel
-                ecosystem to be a breath of fresh air. We hope you love it.
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50 dark:bg-gray-800 w-full">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white">
+          Co oferujemy?
+        </h2>
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+          <!-- Feature 1 -->
+          <div class="bg-white dark:bg-gray-700 rounded-2xl shadow-xl p-8 transition-all transform hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-teal-600 dark:text-teal-300 mx-auto mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m0-2l-4 2v6m0-6h4m-4-6H8" />
+            </svg>
+            <h3 class="text-xl font-semibold text-center text-gray-800 dark:text-white">Łatwe rezerwacje</h3>
+            <p class="mt-4 text-center text-gray-500 dark:text-gray-400">
+              Prosty i intuicyjny system do zarządzania rezerwacjami online.
             </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="bg-white dark:bg-gray-700 rounded-2xl shadow-xl p-8 transition-all transform hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-teal-600 dark:text-teal-300 mx-auto mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.5-4.5m-4.5 4.5V3m0 9l4.5 4.5" />
+            </svg>
+            <h3 class="text-xl font-semibold text-center text-gray-800 dark:text-white">Powiadomienia</h3>
+            <p class="mt-4 text-center text-gray-500 dark:text-gray-400">
+              Automatyczne powiadomienia o nadchodzących rezerwacjach.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="bg-white dark:bg-gray-700 rounded-2xl shadow-xl p-8 transition-all transform hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-teal-600 dark:text-teal-300 mx-auto mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6m6 6h-6m6-12h-6" />
+            </svg>
+            <h3 class="text-xl font-semibold text-center text-gray-800 dark:text-white">Integracja z kalendarzem</h3>
+            <p class="mt-4 text-center text-gray-500 dark:text-gray-400">
+              Synchronizacja z kalendarzami, aby uniknąć podwójnych rezerwacji.
+            </p>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="bg-gray-200 dark:bg-gray-800 bg-opacity-25 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 p-6 lg:p-8">
-            <div>
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-6 stroke-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                    </svg>
-                    <h2 class="ms-3 text-xl font-semibold text-gray-900 dark:text-white">
-                        <a href="https://laravel.com/docs">Documentation</a>
-                    </h2>
-                </div>
-
-                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Laravel has wonderful documentation covering every aspect of the framework. Whether you're new to the framework or have previous experience, we recommend reading all of the documentation from beginning to end.
-                </p>
-
-                <p class="mt-4 text-sm">
-                    <a href="https://laravel.com/docs" class="inline-flex items-center font-semibold text-indigo-700 dark:text-indigo-300">
-                        Explore the documentation
-
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="ms-1 size-5 fill-indigo-500 dark:fill-indigo-200">
-                            <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </p>
-            </div>
-
-            <div>
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-6 stroke-gray-400">
-                        <path stroke-linecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
-                    </svg>
-                    <h2 class="ms-3 text-xl font-semibold text-gray-900 dark:text-white">
-                        <a href="https://laracasts.com">Laracasts</a>
-                    </h2>
-                </div>
-
-                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                </p>
-
-                <p class="mt-4 text-sm">
-                    <a href="https://laracasts.com" class="inline-flex items-center font-semibold text-indigo-700 dark:text-indigo-300">
-                        Start watching Laracasts
-
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="ms-1 size-5 fill-indigo-500 dark:fill-indigo-200">
-                            <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </p>
-            </div>
-
-            <div>
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-6 stroke-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                    </svg>
-                    <h2 class="ms-3 text-xl font-semibold text-gray-900 dark:text-white">
-                        <a href="https://tailwindcss.com/">Tailwind</a>
-                    </h2>
-                </div>
-
-                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Laravel Jetstream is built with Tailwind, an amazing utility first CSS framework that doesn't get in your way. You'll be amazed how easily you can build and maintain fresh, modern designs with this wonderful framework at your fingertips.
-                </p>
-            </div>
-
-            <div>
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-6 stroke-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                    </svg>
-                    <h2 class="ms-3 text-xl font-semibold text-gray-900 dark:text-white">
-                        Authentication
-                    </h2>
-                </div>
-
-                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Authentication and registration views are included with Laravel Jetstream, as well as support for user email verification and resetting forgotten passwords. So, you're free to get started with what matters most: building your application.
-                </p>
-            </div>
-        </div>
-    </div>
+    <!-- Call to Action Section -->
+    <section class="py-20 bg-teal-600 dark:bg-teal-800 text-center text-white">
+      <h2 class="text-3xl sm:text-4xl font-extrabold animate__animated animate__fadeIn">Gotowy, aby zacząć?</h2>
+      <p class="mt-4 text-lg opacity-80 animate__animated animate__fadeIn animate__delay-1s">
+        Dołącz teraz i zyskaj pełną kontrolę nad swoimi rezerwacjami.
+      </p>
+      <a href="#" class="mt-8 inline-block bg-teal-700 hover:bg-teal-600 py-4 px-8 rounded-xl text-lg font-semibold text-white transition-all transform hover:scale-105">
+        Rozpocznij teraz
+      </a>
+    </section>
+  </div>
 </template>
+
+<style scoped>
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Sticky navbar */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  /* Animation classes for fade-in */
+  .animate__animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+  }
+
+  .animate__fadeIn {
+    animation-name: fadeIn;
+  }
+
+  /* Hover and scaling effect */
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+
+  /* Smooth background colors */
+  .bg-teal-600 {
+    background-color: #2d3748;
+  }
+  .bg-teal-700 {
+    background-color: #1a202c;
+  }
+  .bg-teal-800 {
+    background-color: #2d3748;
+  }
+
+  /* Adjustments for dark mode */
+  @media (prefers-color-scheme: dark) {
+    .bg-gradient-to-r {
+      background: linear-gradient(to right, #1a202c, #2d3748);
+    }
+  }
+</style>
