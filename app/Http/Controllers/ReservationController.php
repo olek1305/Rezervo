@@ -12,22 +12,6 @@ use Illuminate\Support\Facades\Log;
 class ReservationController extends Controller
 {
     /**
-     * Fetch reservations for a specific doctor within a date range.
-     */
-    public function getReservationsForDoctor(Request $request): JsonResponse
-    {
-        $doctorId = $request->query('doctor_id');
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
-
-        $reservations = Reservation::where('doctor_id', $doctorId)
-            ->whereBetween('reservation_date', [$startDate, $endDate])
-            ->get();
-
-        return response()->json($reservations);
-    }
-
-    /**
      * Book a reservation for a specific doctor and time slot.
      */
     public function store(Request $request): JsonResponse

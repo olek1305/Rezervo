@@ -23,28 +23,22 @@ const logout = () => {
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
-                            <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Panel
                                 </NavLink>
                                 <NavLink :href="route('doctor.index')" :active="route().current('doctor.index')">
                                     Lekarzy
                                 </NavLink>
-
-                                <!-- Doctor's Calendar and Availability -->
                                 <NavLink
                                     v-if="$page.props.auth.user.role === 'doctor'"
                                     :href="route('doctor.availability', { id: $page.props.auth.user.id })"
@@ -52,8 +46,6 @@ const logout = () => {
                                 >
                                     Kalendarz lekarza
                                 </NavLink>
-
-                                <!-- Doctor's Calendar and Availability -->
                                 <NavLink
                                     v-if="$page.props.auth.user.role === 'admin'"
                                     :href="route('admin.doctors.index')"
@@ -65,7 +57,41 @@ const logout = () => {
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
-                            <!-- Settings Dropdown -->
+                            <!-- Notifications Dropdown -->
+                            <div class="ms-3 relative">
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button class="relative">
+                                            <span class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-400">
+                                                Notifications
+                                            </span>
+                                            <span
+                                                v-if="$page.props.notifications && $page.props.notifications.length"
+                                                class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-800"
+                                            ></span>
+                                        </button>
+                                    </template>
+
+                                    <template #content>
+                                        <div v-if="$page.props.notifications && $page.props.notifications.length" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                            <div
+                                                v-for="notification in $page.props.notifications.slice(0, 5)"
+                                                :key="notification.id"
+                                                class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300"
+                                            >
+                                                <p>{{ notification.data.message }}</p>
+                                                <p class="text-xs text-gray-400 dark:text-gray-500">
+                                                    {{ new Date(notification.created_at).toLocaleString() }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div v-else class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                            No notifications
+                                        </div>
+                                    </template>
+                                </Dropdown>
+                            </div>
+
                             <div class="ms-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -85,22 +111,15 @@ const logout = () => {
                                     </template>
 
                                     <template #content>
-                                        <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
                                             Manage Account
                                         </div>
-
                                         <DropdownLink :href="route('profile.show')">
                                             Profile
                                         </DropdownLink>
-
                                         <div class="border-t border-gray-200 dark:border-gray-600" />
-
-                                        <!-- Authentication -->
                                         <form @submit.prevent="logout">
-                                            <DropdownLink as="button">
-                                                Log Out
-                                            </DropdownLink>
+                                            <DropdownLink as="button">Log Out</DropdownLink>
                                         </form>
                                     </template>
                                 </Dropdown>
@@ -110,14 +129,12 @@ const logout = () => {
                 </div>
             </nav>
 
-            <!-- Page Heading -->
             <header v-if="$slots.header" class="bg-white dark:bg-gray-800 shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
             </header>
 
-            <!-- Page Content -->
             <main>
                 <slot />
             </main>
