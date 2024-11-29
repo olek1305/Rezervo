@@ -44,11 +44,10 @@ class ReservationController extends Controller
         $isAlreadyBookedByUser = Reservation::where('doctor_id', $request->doctor_id)
             ->where('user_id', Auth::id())
             ->where('reservation_date', $request->reservation_date)
-            ->where('reservation_time', $request->reservation_time)
             ->exists();
 
         if ($isAlreadyBookedByUser) {
-            return response()->json(['error' => 'You have already booked this time slot.'], 422);
+            return response()->json(['error' => 'You have already booked a reservation with this doctor on the same day.'], 422);
         }
 
         $reservation = Reservation::create([
