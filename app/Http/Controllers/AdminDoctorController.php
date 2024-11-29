@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DoctorAvailability;
+use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,7 +45,16 @@ class AdminDoctorController extends Controller
             return back()->with('error', 'Ten użytkownik nie posiada roli doctor.');
         }
 
-        $user->update(['role' => 'user']);
-        return back()->with('success', 'Rola Doctor została usunięta.');
+        $doctorId = $user->id;
+
+        DoctorAvailability::where('doctor_id', $doctorId)->delete();
+        Reservation::where('doctor_id', $doctorId)->delete();
+
+        $user->update([
+            'role' => 'user',
+            'specialization' => null,
+        ]);
+
+        return back()->with('success', 'Rola Doctor została usunięta, a powiązane dane zostały wyczyszczone.');
     }
 }
