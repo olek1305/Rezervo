@@ -3,6 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
+import Modal from "@/Components/Modal.vue";
 
 const page = usePage();
 const doctorId = computed(() => page.props.doctorId);
@@ -13,6 +14,11 @@ const currentDate = ref(new Date());
 const selectedDay = ref(null);
 const selectedTime = ref(null);
 const error = ref(null);
+const reservationSuccessModal = ref(false);
+const reservedDetails = ref({
+    date: null,
+    time: null,
+});
 
 // Format date to YYYY-MM-DD
 const formatDate = (date) => date.toISOString().split("T")[0];
@@ -40,7 +46,6 @@ const getDaysInMonth = (date) => {
 
     return days;
 };
-
 
 const days = computed(() => getDaysInMonth(currentDate.value));
 
@@ -80,7 +85,13 @@ const bookAppointment = async () => {
             reservation_time: selectedTime.value,
         });
 
-        alert("Rezerwacja zakończona sukcesem!");
+        reservedDetails.value = {
+            date: selectedDay.value,
+            time: selectedTime.value,
+        };
+
+        reservationSuccessModal.value = true;
+
         selectedDay.value = null;
         selectedTime.value = null;
     } catch (err) {
@@ -101,8 +112,6 @@ const calculateSlotAvailability = (date) => {
         availableSlots: availableSlots.filter((time) => !reservedSlots.includes(time)),
     };
 };
-
-
 </script>
 
 <template>
@@ -160,40 +169,81 @@ const calculateSlotAvailability = (date) => {
             </div>
         </div>
 
-        <!-- Reservation modal -->
-        <div v-if="selectedDay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-white p-6 rounded-lg">
-                <h2 class="text-xl font-bold mb-4">Zarezerwuj wizytę</h2>
-                <p>Data: {{ selectedDay }}</p>
-
-                <!-- Show available times or message if no data -->
-                <div v-if="timeSlots[selectedDay]?.length" class="border rounded w-full grid grid-cols-3 gap-2 p-4">
-                    <div
-                        v-for="time in timeSlots[selectedDay]"
-                        :key="time"
-                        :class="{
-                            'bg-green-200 text-green-800 border rounded p-2 w-full my-1 cursor-pointer hover:border-black': !page.props.reservations[selectedDay]?.includes(time),
-                            'bg-red-200 text-red-800 border rounded p-2 w-full my-1 cursor-not-allowed': page.props.reservations[selectedDay]?.map(t => t.slice(0, 5)).includes(time),
-                            'border-blue-300 border-2 ': selectedTime === time,
-                        }"
-                        @click="!page.props.reservations[selectedDay]?.includes(time) && (selectedTime = time)"
-                    >
-                        {{ time }}
+        <!-- Success Modal -->
+        <Modal
+            :show="reservationSuccessModal"
+            maxWidth="sm"
+            closeable
+            @close="reservationSuccessModal = false"
+        >
+            <template v-slot>
+                <div class="p-6 dark:text-white">
+                    <h2 class="text-xl font-bold mb-4">Rezerwacja zakończona sukcesem!</h2>
+                    <p>Data: {{ reservedDetails.date }}</p>
+                    <p>Godzina: {{ reservedDetails.time }}</p>
+                    <div class="flex justify-end mt-4">
+                        <button
+                            class="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+                            @click="reservationSuccessModal = false"
+                        >
+                            OK
+                        </button>
                     </div>
                 </div>
-                <div v-else>
-                    <!-- No available times for the selected day. -->
-                    <p>Brak dostępnych godzin dla wybranego dnia.</p>
-                </div>
+            </template>
+        </Modal>
 
-                <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
-                <div class="flex justify-end mt-4">
-                    <button class="btn bg-gray-300 mr-2 p-1" @click="selectedDay = null">Anuluj</button>
-                    <button class="btn bg-blue-500 text-white p-1" @click="bookAppointment" :disabled="!selectedTime">
-                        Zarezerwuj
-                    </button>
+
+        <!-- Reservation modal -->
+        <Modal
+            :show="selectedDay !== null"
+            maxWidth="lg"
+            closeable
+            @close="selectedDay = null"
+        >
+            <template v-slot>
+                <div class="p-6 dark:text-white">
+                    <h2 class="text-xl font-bold mb-4">Zarezerwuj wizytę</h2>
+                    <p>Data: {{ selectedDay }}</p>
+
+                    <!-- Show available times -->
+                    <div v-if="timeSlots[selectedDay]?.length" class="grid grid-cols-3 gap-2 mt-4">
+                        <button
+                            v-for="time in timeSlots[selectedDay]"
+                            :key="time"
+                            :class="{
+                        'bg-green-200 text-green-800 rounded p-2 cursor-pointer hover:bg-green-300': !page.props.reservations[selectedDay]?.includes(time),
+                        'bg-red-200 text-red-800 rounded p-2 cursor-not-allowed': page.props.reservations[selectedDay]?.map(t => t.slice(0, 5)).includes(time),
+                        'border-blue-500 border-2': selectedTime === time
+                    }"
+                            :disabled="page.props.reservations[selectedDay]?.includes(time)"
+                            @click="!page.props.reservations[selectedDay]?.includes(time) && (selectedTime = time)"
+                        >
+                            {{ time }}
+                        </button>
+                    </div>
+                    <div v-else>
+                        <p>Brak dostępnych godzin dla wybranego dnia.</p>
+                    </div>
+
+                    <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
+                    <div class="flex justify-end mt-4">
+                        <button
+                            class="btn bg-gray-300 px-4 py-2 mr-2 rounded shadow hover:bg-gray-400 dark:bg-gray-500"
+                            @click="selectedDay = null"
+                        >
+                            Anuluj
+                        </button>
+                        <button
+                            class="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+                            @click="bookAppointment"
+                            :disabled="!selectedTime"
+                        >
+                            Zarezerwuj
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </template>
+        </Modal>
     </AppLayout>
 </template>
