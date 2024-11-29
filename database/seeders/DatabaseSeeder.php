@@ -13,6 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $titles = [
+            'Dermatologist',
+            'Endocrinologist',
+            'Gastroenterologist',
+            'Neurologist',
+            'Orthopedic Surgeon',
+            'Pediatrician',
+            'Psychiatrist',
+            'Radiologist',
+            'Physiotherapist',
+        ];
+
         User::factory(10)->create();
 
         // Create 5 admins
@@ -23,7 +35,11 @@ class DatabaseSeeder extends Seeder
         // Create 5 doctors
         User::factory(5)->create([
             'role' => 'doctor',
-        ]);
+        ])->each(function ($doctor) use ($titles) {
+            $doctor->update([
+                'specialization' => $titles[array_rand($titles)],
+            ]);
+        });
 
         //User
         User::factory()->create([
@@ -46,6 +62,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'doctor@example.com',
             'password' => bcrypt('password'),
             'role' => 'doctor',
+            'specialization' => 'Cardiologist',
         ]);
     }
 }

@@ -68,19 +68,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function reservations(): HasMany
+    public function availabilities()
     {
-        return $this->hasMany(Reservation::class, 'user_id');
+        return $this->hasMany(DoctorAvailability::class, 'doctor_id');
     }
-
-    public function doctorCalendars(): HasMany
-    {
-        return $this->hasMany(DoctorCalendar::class, 'doctor_id');
-    }
-
-    public function doctorReservations(): HasMany
-    {
-        return $this->hasMany(Reservation::class, 'doctor_id');
-    }
-
 }

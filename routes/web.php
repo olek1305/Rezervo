@@ -22,9 +22,11 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // Doctor's Choice Page
+// Doctor's Choice Page
     Route::get('/doctors', function () {
-        $doctors = User::where('role', 'doctor')->get();
+        $doctors = User::where('role', 'doctor')
+            ->whereHas('availabilities')
+            ->get(['id', 'name', 'specialization']);
 
         return Inertia::render('Doctor/Index', [
             'doctors' => $doctors,
