@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
+import Modal from "@/Components/Modal.vue";
+
 
 const props = defineProps({
     users: Array,
@@ -8,25 +10,40 @@ const props = defineProps({
 });
 
 const localSearch = ref(props.search || '');
+const showAssignModal = ref(false);
+const showRemoveModal = ref(false);
+const selectedUserId = ref(null);
 
 function searchUsers() {
     router.get(route('admin.doctors.index'), { search: localSearch.value });
 }
 
-function assignDoctor(userId) {
-    if (confirm('Czy na pewno chcesz nadać rolę Doctor temu użytkownikowi?')) {
-        router.post(route('admin.doctors.assign', { user: userId }), {}, {
-            onSuccess: () => alert('Rola Doctor została nadana.'),
-        });
-    }
+function openAssignModal(userId) {
+    selectedUserId.value = userId;
+    showAssignModal.value = true;
 }
 
-function removeDoctor(userId) {
-    if (confirm('Czy na pewno chcesz usunąć rolę Doctor temu użytkownikowi?')) {
-        router.post(route('admin.doctors.remove', { user: userId }), {}, {
-            onSuccess: () => alert('Rola Doctor została usunięta.'),
-        });
-    }
+function openRemoveModal(userId) {
+    selectedUserId.value = userId;
+    showRemoveModal.value = true;
+}
+
+function assignDoctor() {
+    router.post(route('admin.doctors.assign', { user: selectedUserId.value }), {}, {
+        onSuccess: () => {
+            alert('Rola Doctor została nadana.');
+            showAssignModal.value = false;
+        },
+    });
+}
+
+function removeDoctor() {
+    router.post(route('admin.doctors.remove', { user: selectedUserId.value }), {}, {
+        onSuccess: () => {
+            alert('Rola Doctor została usunięta.');
+            showRemoveModal.value = false;
+        },
+    });
 }
 </script>
 
@@ -64,13 +81,13 @@ function removeDoctor(userId) {
                     </div>
                     <div class="flex gap-2">
                         <button
-                            @click="assignDoctor(user.id)"
+                            @click="openAssignModal(user.id)"
                             class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600"
                         >
                             Nadaj rolę Doctor
                         </button>
                         <button
-                            @click="removeDoctor(user.id)"
+                            @click="openRemoveModal(user.id)"
                             class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
                         >
                             Usuń rolę Doctor
@@ -82,5 +99,53 @@ function removeDoctor(userId) {
         <div v-else class="text-center text-gray-500">
             Brak wyników do wyświetlenia.
         </div>
+
+        <!-- Assign Role Modal -->
+        <Modal :show="showAssignModal" @close="showAssignModal = false">
+            <template v-slot>
+                <div class="p-6">
+                    <h2 class="text-lg font-bold mb-4">Potwierdź akcję</h2>
+                    <p>Czy na pewno chcesz nadać rolę Doctor temu użytkownikowi?</p>
+                    <div class="mt-4 flex justify-end gap-2">
+                        <button
+                            @click="showAssignModal = false"
+                            class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
+                        >
+                            Anuluj
+                        </button>
+                        <button
+                            @click="assignDoctor"
+                            class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600"
+                        >
+                            Potwierdź
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </Modal>
+
+        <!-- Remove Role Modal -->
+        <Modal :show="showRemoveModal" @close="showRemoveModal = false">
+            <template v-slot>
+                <div class="p-6 dark:text-white">
+                    <h2 class="text-lg font-bold mb-4">Potwierdź akcję</h2>
+                    <p>Czy na pewno chcesz usunąć rolę Doctor temu użytkownikowi?</p>
+                    <div class="mt-4 flex justify-end gap-2">
+                        <button
+                            @click="showRemoveModal = false"
+                            class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
+                        >
+                            Anuluj
+                        </button>
+                        <button
+                            @click="removeDoctor"
+                            class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
+                        >
+                            Potwierdź
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </Modal>
     </div>
 </template>
