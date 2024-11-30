@@ -18,6 +18,7 @@ const form = useForm({
     name: props.user.name,
     email: props.user.email,
     photo: null,
+    specialization: props.user.specialization || '',
 });
 
 const verificationLinkSent = ref(null);
@@ -73,6 +74,8 @@ const clearPhotoFileInput = () => {
         photoInput.value.value = null;
     }
 };
+
+console.log(form);
 </script>
 
 <template>
@@ -126,6 +129,19 @@ const clearPhotoFileInput = () => {
                 </SecondaryButton>
 
                 <InputError :message="form.errors.photo" class="mt-2" />
+            </div>
+
+            <!-- Specialization -->
+            <div v-if="$page.props.auth.user.role === 'doctor'" class="col-span-6 sm:col-span-4">
+                <InputLabel for="specialization" value="Specialization" />
+                <TextInput
+                    id="specialization"
+                    v-model="form.specialization"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <InputError :message="form.errors.specialization" class="mt-2" />
             </div>
 
             <!-- Name -->
