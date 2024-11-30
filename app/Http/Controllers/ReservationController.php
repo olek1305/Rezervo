@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\DoctorAvailability;
 use App\Models\Reservation;
+use App\Models\User;
+use App\Notifications\ReservationCreatedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +23,8 @@ class ReservationController extends Controller
             'reservation_date' => 'required|date|after_or_equal:today',
             'reservation_time' => 'required|date_format:H:i',
         ]);
+
+        $doctor = User::findOrFail($request->doctor_id);
 
         $isAvailable = DoctorAvailability::where('doctor_id', $request->doctor_id)
             ->where('available_date', $request->reservation_date)
@@ -56,6 +60,15 @@ class ReservationController extends Controller
             'reservation_date' => $request->reservation_date,
             'reservation_time' => $request->reservation_time,
         ]);
+
+        $reservationDetails = [
+            'doctor_name' => $doctor->name,
+            'specialization' => $doctor->specialization,
+            'date' => $request->reservation_date,
+            'time' => $request->reservation_time,
+        ];
+
+        Auth::user()->notify(new ReservationCreatedNotification($reservationDetails));
 
         return response()->json(['message' => 'Reservation created successfully.', 'reservation' => $reservation], 201);
     }
