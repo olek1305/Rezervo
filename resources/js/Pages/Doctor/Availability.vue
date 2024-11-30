@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 
+const userSpecialization = usePage().props.auth.user.specialization || null;
 const availabilities = ref(usePage().props.availabilities || []);
 const newSlot = ref({
     available_date: '',
@@ -9,31 +10,48 @@ const newSlot = ref({
     end_time: '',
 });
 const errors = ref({});
+const warning = ref(
+    !userSpecialization || userSpecialization.trim() === ''
+        ? 'Nie posiadasz ustawionej specjalizacji, więc nie możesz ustawić terminu.'
+        : null
+);
 
 const addAvailability = async () => {
+    if (warning.value) {
+        return;
+    }
+
     try {
         await router.post('/doctor/availability', newSlot.value);
-        alert('Availability added!');
+        alert('Dostępność została dodana!');
         newSlot.value = { available_date: '', start_time: '', end_time: '' };
     } catch (err) {
         errors.value = err.response.data.errors || {};
     }
 };
 
+
 const deleteAvailability = async (id) => {
-    if (!confirm('Are you sure you want to delete this slot?')) return;
+    if (!confirm('Czy na pewno chcesz usunąć ten termin?')) return;
     await router.delete(`/doctor/availability/${id}`);
-    alert('Availability deleted!');
+    alert('Dostępność została usunięta!');
 };
 </script>
 
+
 <template>
     <div>
-        <h1 class="text-2xl font-bold">Manage Availability</h1>
+        <h1 class="text-2xl font-bold">Zarządzaj Dostępnością</h1>
 
-        <form @submit.prevent="addAvailability" class="mt-4 space-y-4">
+        <!-- Warning about no specialization -->
+        <div v-if="warning" class="mt-4 p-4 bg-red-100 text-red-600 rounded">
+            {{ warning }}
+        </div>
+
+        <!-- Add availability form -->
+        <form v-if="!warning" @submit.prevent="addAvailability" class="mt-4 space-y-4">
             <div>
-                <label for="date" class="block font-medium">Date:</label>
+                <label for="date" class="block font-medium">Data:</label>
                 <input
                     v-model="newSlot.available_date"
                     type="date"
@@ -44,7 +62,7 @@ const deleteAvailability = async (id) => {
             </div>
 
             <div>
-                <label for="start_time" class="block font-medium">Start Time:</label>
+                <label for="start_time" class="block font-medium">Godzina rozpoczęcia:</label>
                 <input
                     v-model="newSlot.start_time"
                     type="time"
@@ -55,7 +73,7 @@ const deleteAvailability = async (id) => {
             </div>
 
             <div>
-                <label for="end_time" class="block font-medium">End Time:</label>
+                <label for="end_time" class="block font-medium">Godzina zakończenia:</label>
                 <input
                     v-model="newSlot.end_time"
                     type="time"
@@ -66,12 +84,13 @@ const deleteAvailability = async (id) => {
             </div>
 
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-                Add Availability
+                Dodaj Dostępność
             </button>
         </form>
 
+        <!-- Existing terms -->
         <div class="mt-8">
-            <h2 class="text-xl font-semibold">Existing Slots</h2>
+            <h2 class="text-xl font-semibold">Istniejące Terminy</h2>
             <ul class="mt-4 space-y-2">
                 <li
                     v-for="slot in availabilities"
@@ -85,10 +104,11 @@ const deleteAvailability = async (id) => {
                         @click="deleteAvailability(slot.id)"
                         class="text-red-500 hover:underline"
                     >
-                        Remove
+                        Usuń
                     </button>
                 </li>
             </ul>
         </div>
     </div>
 </template>
+

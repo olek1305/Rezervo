@@ -24,14 +24,16 @@ class DoctorAvailabilityController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // Validate input
+        if (Auth::user()->specialization === null) {
+            return back()->with('error', 'Nie możesz ustawić terminu bez ustawionej specjalizacji.');
+        }
+
         $request->validate([
             'available_date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        // Create availability
         DoctorAvailability::create([
             'doctor_id' => Auth::id(),
             'available_date' => $request->available_date,
