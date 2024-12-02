@@ -1,7 +1,8 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import {computed} from 'vue';
-import {usePage} from '@inertiajs/vue3';
+import { computed, watchEffect } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
 
 const page = usePage();
 const doctors = computed(() => page.props.doctors);
@@ -9,15 +10,30 @@ const doctors = computed(() => page.props.doctors);
 const goToDoctorCalendar = (doctorId) => {
     window.location.href = `/doctor/${doctorId}/calendar`;
 };
+
+const { locale, t } = useI18n();
+
+const setLanguage = (newLang) => {
+    locale.value = newLang;
+    localStorage.setItem('lang', newLang);
+};
+
+watchEffect(() => {
+    const storedLang = localStorage.getItem('lang');
+    if (storedLang) {
+        locale.value = storedLang;
+    }
+});
 </script>
 
+
 <template>
-    <AppLayout title="Choose a Doctor">
+    <AppLayout :title="t('choose_doctor')">
         <div class="py-12">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg p-6">
                     <h1 class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">
-                        Choose a Doctor
+                        {{ t('choose_doctor') }}
                     </h1>
                     <ul class="space-y-4">
                         <li
@@ -30,14 +46,14 @@ const goToDoctorCalendar = (doctorId) => {
                                     {{ doctor.name }}
                                 </span>
                                 <span class="text-sm text-gray-600 dark:text-gray-400">
-                                    Specjalizacja: {{ doctor.specialization }}
+                                    {{ t('doctor_specialization') }}: {{ doctor.specialization }}
                                 </span>
                             </div>
                             <button
                                 @click="goToDoctorCalendar(doctor.id)"
                                 class="px-6 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
                             >
-                                Select
+                                {{ t('select') }}
                             </button>
                         </li>
                     </ul>

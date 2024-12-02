@@ -1,0 +1,15 @@
+{
+    "welcome": "Witamy",
+    "notifications": "Powiadomienia",
+    "no_notifications": "Brak powiadomień",
+    "manage_account": "Zarządzaj kontem",
+    "profile": "Profil",
+    "log_out": "Wyloguj się",
+    "choose_doctor": "Wybierz lekarza",
+    "doctor_specialization": "Specjalizacja",
+    "select": "Wybierz",
+    "dashboard": "Panel",
+    "doctors": "Lekarze",
+    "doctor_calendar": "Kalendarz lekarza",
+    "admin": "Admin"
+}

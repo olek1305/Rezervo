@@ -5,6 +5,8 @@ import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
+import LanguageSwitcher from "@/Components/LanguageSwitcher.vue";
+import { useI18n } from 'vue-i18n';
 
 defineProps({
     title: String,
@@ -13,6 +15,8 @@ defineProps({
 const logout = () => {
     router.post(route('logout'));
 };
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -34,24 +38,24 @@ const logout = () => {
 
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Panel
+                                    {{ t('dashboard') }}
                                 </NavLink>
                                 <NavLink :href="route('doctor.index')" :active="route().current('doctor.index')">
-                                    Lekarzy
+                                    {{ t('doctors') }}
                                 </NavLink>
                                 <NavLink
                                     v-if="$page.props.auth.user.role === 'doctor'"
                                     :href="route('doctor.availability', { id: $page.props.auth.user.id })"
                                     :active="route().current('doctor.availability')"
                                 >
-                                    Kalendarz lekarza
+                                    {{ t('doctor_calendar') }}
                                 </NavLink>
                                 <NavLink
                                     v-if="$page.props.auth.user.role === 'admin'"
                                     :href="route('admin.doctors.index')"
                                     :active="route().current('admin.doctors.index')"
                                 >
-                                    Admin
+                                    {{ t('admin') }}
                                 </NavLink>
                             </div>
                         </div>
@@ -90,6 +94,10 @@ const logout = () => {
                                         </div>
                                     </template>
                                 </Dropdown>
+                            </div>
+
+                            <div class="ms-3 relative">
+                                <LanguageSwitcher />
                             </div>
 
                             <div class="ms-3 relative">

@@ -1,0 +1,15 @@
+{
+    "welcome": "Welcome",
+    "notifications": "Notifications",
+    "no_notifications": "No notifications",
+    "manage_account": "Manage Account",
+    "profile": "Profile",
+    "log_out": "Log Out",
+    "choose_doctor": "Choose a Doctor",
+    "doctor_specialization": "Specialization",
+    "select": "Select",
+    "dashboard": "Dashboard",
+    "doctors": "Doctors",
+    "doctor_calendar": "Doctor's Calendar",
+    "admin": "Admin"
+}
