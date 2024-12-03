@@ -7,6 +7,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import {useI18n} from "vue-i18n";
 
 const recovery = ref(false);
 
@@ -35,10 +36,12 @@ const toggleRecovery = async () => {
 const submit = () => {
     form.post(route('two-factor.login'));
 };
+
+const { t } = useI18n();
 </script>
 
 <template>
-    <Head title="Two-factor Confirmation" />
+    <Head title="t('two_factor_confirmation_title')" />
 
     <AuthenticationCard>
         <template #logo>
@@ -47,11 +50,11 @@ const submit = () => {
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
             <template v-if="! recovery">
-                Please confirm access to your account by entering the authentication code provided by your authenticator application.
+                {{ t('confirm_access') }}
             </template>
 
             <template v-else>
-                Please confirm access to your account by entering one of your emergency recovery codes.
+                {{ t('confirm_recovery_code') }}
             </template>
         </div>
 
@@ -87,16 +90,16 @@ const submit = () => {
             <div class="flex items-center justify-end mt-4">
                 <button type="button" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 underline cursor-pointer" @click.prevent="toggleRecovery">
                     <template v-if="! recovery">
-                        Use a recovery code
+                        {{ t('use_recovery_code') }}
                     </template>
 
                     <template v-else>
-                        Use an authentication code
+                        {{ t('use_auth_code') }}
                     </template>
                 </button>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                    {{ t('log_in') }}
                 </PrimaryButton>
             </div>
         </form>

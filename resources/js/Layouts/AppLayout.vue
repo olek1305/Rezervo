@@ -67,7 +67,7 @@ const { t } = useI18n();
                                     <template #trigger>
                                         <button class="relative">
                                             <span class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-400">
-                                                Notifications
+                                                {{ t('notifications') }}
                                             </span>
                                             <span
                                                 v-if="$page.props.notifications && $page.props.notifications.length"
@@ -90,7 +90,7 @@ const { t } = useI18n();
                                             </div>
                                         </div>
                                         <div v-else class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
-                                            No notifications
+                                            {{ t('no_notifications') }}
                                         </div>
                                     </template>
                                 </Dropdown>
@@ -120,14 +120,14 @@ const { t } = useI18n();
 
                                     <template #content>
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
+                                            {{ t('manage_account') }}
                                         </div>
                                         <DropdownLink :href="route('profile.show')">
-                                            Profile
+                                            {{ t('profile') }}
                                         </DropdownLink>
                                         <div class="border-t border-gray-200 dark:border-gray-600" />
                                         <form @submit.prevent="logout">
-                                            <DropdownLink as="button">Log Out</DropdownLink>
+                                            <DropdownLink as="button">{{ t('log_out') }}</DropdownLink>
                                         </form>
                                     </template>
                                 </Dropdown>

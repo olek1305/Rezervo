@@ -63,7 +63,7 @@ function removeDoctor() {
                 type="submit"
                 class="px-6 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
             >
-                Szukaj
+                {{ t('search') }}
             </button>
         </form>
 
@@ -84,20 +84,20 @@ function removeDoctor() {
                             @click="openAssignModal(user.id)"
                             class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600"
                         >
-                            Nadaj rolę Doctor
+                            {{ t('assign_role') }}
                         </button>
                         <button
                             @click="openRemoveModal(user.id)"
                             class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
                         >
-                            Usuń rolę Doctor
+                            {{ t('remove_role') }}
                         </button>
                     </div>
                 </li>
             </ul>
         </div>
         <div v-else class="text-center text-gray-500">
-            Brak wyników do wyświetlenia.
+            {{ t('no_display') }}
         </div>
 
         <!-- Assign Role Modal -->
@@ -111,13 +111,13 @@ function removeDoctor() {
                             @click="showAssignModal = false"
                             class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
                         >
-                            Anuluj
+                            {{ t('cancel') }}
                         </button>
                         <button
                             @click="assignDoctor"
                             class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600"
                         >
-                            Potwierdź
+                            {{ t('confirm') }}
                         </button>
                     </div>
                 </div>
@@ -128,20 +128,20 @@ function removeDoctor() {
         <Modal :show="showRemoveModal" @close="showRemoveModal = false">
             <template v-slot>
                 <div class="p-6 dark:text-white">
-                    <h2 class="text-lg font-bold mb-4">Potwierdź akcję</h2>
-                    <p>Czy na pewno chcesz usunąć rolę Doctor temu użytkownikowi?</p>
+                    <h2 class="text-lg font-bold mb-4">{{ t('confirm_action') }}</h2>
+                    <p>{{ t('ask_role_to_confirm') }}</p>
                     <div class="mt-4 flex justify-end gap-2">
                         <button
                             @click="showRemoveModal = false"
                             class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
                         >
-                            Anuluj
+                            {{ t('cancel') }}
                         </button>
                         <button
                             @click="removeDoctor"
                             class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
                         >
-                            Potwierdź
+                            {{ t('confirm') }}
                         </button>
                     </div>
                 </div>

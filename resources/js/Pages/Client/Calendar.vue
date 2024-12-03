@@ -4,12 +4,14 @@ import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import Modal from "@/Components/Modal.vue";
+import {useI18n} from "vue-i18n";
 
 const page = usePage();
 const doctorId = computed(() => page.props.doctorId);
 const doctorName = computed(() => page.props.doctorName);
 const timeSlots = computed(() => page.props.timeSlots || {});
 
+const isLoading = ref(false);
 const currentDate = ref(new Date());
 const selectedDay = ref(null);
 const selectedTime = ref(null);
@@ -78,6 +80,8 @@ const bookAppointment = async () => {
         return;
     }
 
+    isLoading.value = true;
+
     try {
         await axios.post("/reservations", {
             doctor_id: doctorId.value,
@@ -91,11 +95,12 @@ const bookAppointment = async () => {
         };
 
         reservationSuccessModal.value = true;
-
         selectedDay.value = null;
         selectedTime.value = null;
     } catch (err) {
         error.value = err.response?.data?.error || "Nie udało się zarezerwować terminu.";
+    } finally {
+        isLoading.value = false;
     }
 };
 
@@ -112,31 +117,35 @@ const calculateSlotAvailability = (date) => {
         availableSlots: availableSlots.filter((time) => !reservedSlots.includes(time)),
     };
 };
+
+const { t } = useI18n();
 </script>
 
 <template>
-    <AppLayout :title="`Kalendarz lekarza - ${doctorName}`">
+    <AppLayout :title="t('doctor_calendar_title', { doctorName })">
         <div class="py-12">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-900 dark:text-gray-100 overflow-hidden shadow-lg rounded-lg">
-                    <!-- Nagłówek -->
+                    <!-- Header -->
                     <header class="flex justify-between items-center border-b px-6 py-4 bg-gray-100 dark:bg-gray-800">
                         <h1 class="text-lg font-bold">{{ doctorName }}</h1>
                         <div class="flex space-x-4">
-                            <button @click="previousMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 ring-1 ring-black ring-opacity-5">Poprzedni miesiąc</button>
-                            <button @click="goToToday" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900">Dziś</button>
-                            <button @click="nextMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900">Następny miesiąc</button>
+                            <button @click="previousMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 ring-1 ring-black ring-opacity-5">
+                                {{ t('previous_month') }}
+                            </button>
+                            <button @click="goToToday" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900">
+                                {{ t('today') }}
+                            </button>
+                            <button @click="nextMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900">
+                                {{ t('next_month') }}
+                            </button>
                         </div>
                     </header>
 
                     <!-- Calendar grid -->
                     <div class="grid grid-cols-7 gap-2 p-6 text-black">
                         <!-- Weekday headers -->
-                        <div
-                            v-for="day in ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd']"
-                            :key="day"
-                            class="text-center font-semibold dark:text-white"
-                        >
+                        <div v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day" class="text-center font-semibold dark:text-white">
                             {{ day }}
                         </div>
 
@@ -159,9 +168,9 @@ const calculateSlotAvailability = (date) => {
                             <!-- Display the number of available and reserved slots -->
                             <div v-if="calculateSlotAvailability(day.date).totalSlots > 0" class="text-sm mt-2">
                                 <p class="text-green-800">
-                                    Dostępne: {{ calculateSlotAvailability(day.date).availableSlots.length }}
+                                    {{ t('available') }}: {{ calculateSlotAvailability(day.date).availableSlots.length }}
                                 </p>
-                                <p class="text-red-800">Zajęte: {{ calculateSlotAvailability(day.date).reservedSlots }}</p>
+                                <p class="text-red-800">{{ t('reserved') }}: {{ calculateSlotAvailability(day.date).reservedSlots }}</p>
                             </div>
                         </div>
                     </div>
@@ -170,41 +179,27 @@ const calculateSlotAvailability = (date) => {
         </div>
 
         <!-- Success Modal -->
-        <Modal
-            :show="reservationSuccessModal"
-            maxWidth="sm"
-            closeable
-            @close="reservationSuccessModal = false"
-        >
+        <Modal :show="reservationSuccessModal" maxWidth="sm" closeable @close="reservationSuccessModal = false">
             <template v-slot>
                 <div class="p-6 dark:text-white">
-                    <h2 class="text-xl font-bold mb-4">Rezerwacja zakończona sukcesem!</h2>
-                    <p>Data: {{ reservedDetails.date }}</p>
-                    <p>Godzina: {{ reservedDetails.time }}</p>
+                    <h2 class="text-xl font-bold mb-4">{{ t('reservation_successful') }}</h2>
+                    <p>{{ t('date') }}: {{ reservedDetails.date }}</p>
+                    <p>{{ t('time') }}: {{ reservedDetails.time }}</p>
                     <div class="flex justify-end mt-4">
-                        <button
-                            class="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
-                            @click="reservationSuccessModal = false"
-                        >
-                            OK
+                        <button class="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600" @click="reservationSuccessModal = false">
+                            {{ t('confirm') }}
                         </button>
                     </div>
                 </div>
             </template>
         </Modal>
 
-
         <!-- Reservation modal -->
-        <Modal
-            :show="selectedDay !== null"
-            maxWidth="lg"
-            closeable
-            @close="selectedDay = null"
-        >
+        <Modal :show="selectedDay !== null" maxWidth="lg" closeable @close="selectedDay = null">
             <template v-slot>
                 <div class="p-6 dark:text-white">
-                    <h2 class="text-xl font-bold mb-4">Zarezerwuj wizytę</h2>
-                    <p>Data: {{ selectedDay }}</p>
+                    <h2 class="text-xl font-bold mb-4">{{ t('book_appointment') }}</h2>
+                    <p>{{ t('date') }}: {{ selectedDay }}</p>
 
                     <!-- Show available times -->
                     <div v-if="timeSlots[selectedDay]?.length" class="grid grid-cols-3 gap-2 mt-4">
@@ -212,10 +207,10 @@ const calculateSlotAvailability = (date) => {
                             v-for="time in timeSlots[selectedDay]"
                             :key="time"
                             :class="{
-                        'bg-green-200 text-green-800 rounded p-2 cursor-pointer hover:bg-green-300': !page.props.reservations[selectedDay]?.includes(time),
-                        'bg-red-200 text-red-800 rounded p-2 cursor-not-allowed': page.props.reservations[selectedDay]?.map(t => t.slice(0, 5)).includes(time),
-                        'border-blue-500 border-2': selectedTime === time
-                    }"
+                                'bg-green-200 text-green-800 rounded p-2 cursor-pointer hover:bg-green-300': !page.props.reservations[selectedDay]?.includes(time),
+                                'bg-red-200 text-red-800 rounded p-2 cursor-not-allowed': page.props.reservations[selectedDay]?.map(time => time.slice(0, 5)).includes(time),
+                                'border-blue-500 border-2': selectedTime === time
+                            }"
                             :disabled="page.props.reservations[selectedDay]?.includes(time)"
                             @click="!page.props.reservations[selectedDay]?.includes(time) && (selectedTime = time)"
                         >
@@ -223,23 +218,21 @@ const calculateSlotAvailability = (date) => {
                         </button>
                     </div>
                     <div v-else>
-                        <p>Brak dostępnych godzin dla wybranego dnia.</p>
+                        <p>{{ t('no_available_times') }}</p>
                     </div>
 
                     <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
                     <div class="flex justify-end mt-4">
-                        <button
-                            class="btn bg-gray-300 px-4 py-2 mr-2 rounded shadow hover:bg-gray-400 dark:bg-gray-500"
-                            @click="selectedDay = null"
-                        >
-                            Anuluj
+                        <button class="btn bg-gray-300 px-4 py-2 mr-2 rounded shadow hover:bg-gray-400 dark:bg-gray-500" @click="selectedDay = null">
+                            {{ t('cancel') }}
                         </button>
                         <button
                             class="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
                             @click="bookAppointment"
-                            :disabled="!selectedTime"
+                            :disabled="!selectedTime || isLoading"
                         >
-                            Zarezerwuj
+                            <span v-if="isLoading">{{ t('loading') }}</span>
+                            <span v-else>{{ t('reserve') }}</span>
                         </button>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { computed, watchEffect } from 'vue';
+import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 
@@ -11,19 +11,7 @@ const goToDoctorCalendar = (doctorId) => {
     window.location.href = `/doctor/${doctorId}/calendar`;
 };
 
-const { locale, t } = useI18n();
-
-const setLanguage = (newLang) => {
-    locale.value = newLang;
-    localStorage.setItem('lang', newLang);
-};
-
-watchEffect(() => {
-    const storedLang = localStorage.getItem('lang');
-    if (storedLang) {
-        locale.value = storedLang;
-    }
-});
+const {t} = useI18n();
 </script>
 
 

@@ -8,6 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     user: Object,
@@ -75,17 +76,17 @@ const clearPhotoFileInput = () => {
     }
 };
 
-console.log(form);
+const { t } = useI18n();
 </script>
 
 <template>
     <FormSection @submitted="updateProfileInformation">
         <template #title>
-            Profile Information
+            {{ t('profile_information') }}
         </template>
 
         <template #description>
-            Update your account's profile information and email address.
+            {{ t('profile_information_description') }}
         </template>
 
         <template #form>
@@ -100,7 +101,7 @@ console.log(form);
                     @change="updatePhotoPreview"
                 >
 
-                <InputLabel for="photo" value="Photo" />
+                <InputLabel for="photo" :value="t('photo')" />
 
                 <!-- Current Profile Photo -->
                 <div v-show="! photoPreview" class="mt-2">
@@ -116,7 +117,7 @@ console.log(form);
                 </div>
 
                 <SecondaryButton class="mt-2 me-2" type="button" @click.prevent="selectNewPhoto">
-                    Select A New Photo
+                    {{ t('select_new_photo') }}
                 </SecondaryButton>
 
                 <SecondaryButton
@@ -125,7 +126,7 @@ console.log(form);
                     class="mt-2"
                     @click.prevent="deletePhoto"
                 >
-                    Remove Photo
+                    {{ t('remove_photo') }}
                 </SecondaryButton>
 
                 <InputError :message="form.errors.photo" class="mt-2" />
@@ -133,7 +134,7 @@ console.log(form);
 
             <!-- Specialization -->
             <div v-if="$page.props.auth.user.role === 'doctor'" class="col-span-6 sm:col-span-4">
-                <InputLabel for="specialization" value="Specialization" />
+                <InputLabel for="specialization" :value="t('specialization')" />
                 <TextInput
                     id="specialization"
                     v-model="form.specialization"
@@ -146,7 +147,7 @@ console.log(form);
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" :value="t('name')" />
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -160,7 +161,7 @@ console.log(form);
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="t('email')" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -173,7 +174,7 @@ console.log(form);
 
                 <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
                     <p class="text-sm mt-2 dark:text-white">
-                        Your email address is unverified.
+                        {{ t('email_unverified') }}
 
                         <Link
                             :href="route('verification.send')"
@@ -182,12 +183,12 @@ console.log(form);
                             class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                             @click.prevent="sendEmailVerification"
                         >
-                            Click here to re-send the verification email.
+                            {{ t('resend_verification_email') }}
                         </Link>
                     </p>
 
                     <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                        A new verification link has been sent to your email address.
+                        {{ t('verification_email_sent') }}
                     </div>
                 </div>
             </div>
@@ -195,11 +196,11 @@ console.log(form);
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="me-3">
-                Saved.
+                {{ t('saved') }}
             </ActionMessage>
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+                {{ t('save') }}
             </PrimaryButton>
         </template>
     </FormSection>

@@ -7,6 +7,7 @@ import DialogModal from '@/Components/DialogModal.vue';
 import InputError from '@/Components/InputError.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import {useI18n} from "vue-i18n";
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
@@ -35,37 +36,39 @@ const closeModal = () => {
 
     form.reset();
 };
+
+const { t } = useI18n();
 </script>
 
 <template>
     <ActionSection>
         <template #title>
-            Delete Account
+            {{ t('delete_account') }}
         </template>
 
         <template #description>
-            Permanently delete your account.
+            {{ t('perm_delete_account') }}
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+                {{ t('warning_delete_account') }}
             </div>
 
             <div class="mt-5">
                 <DangerButton @click="confirmUserDeletion">
-                    Delete Account
+                    {{ t('delete_account') }}
                 </DangerButton>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
             <DialogModal :show="confirmingUserDeletion" @close="closeModal">
                 <template #title>
-                    Delete Account
+                    {{ t('delete_account') }}
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+                    {{ t('confirm_delete_account') }}
 
                     <div class="mt-4">
                         <TextInput
@@ -84,7 +87,7 @@ const closeModal = () => {
 
                 <template #footer>
                     <SecondaryButton @click="closeModal">
-                        Cancel
+                        {{ t('cancel') }}
                     </SecondaryButton>
 
                     <DangerButton
@@ -93,7 +96,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                        {{ t('delete_account') }}
                     </DangerButton>
                 </template>
             </DialogModal>

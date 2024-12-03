@@ -6,6 +6,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     email: String,
@@ -24,10 +25,12 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
+
+const { t } = useI18n();
 </script>
 
 <template>
-    <Head title="Reset Password" />
+    <Head title="t('reset_password_title')" />
 
     <AuthenticationCard>
         <template #logo>
@@ -77,7 +80,7 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
+                    {{ t('reset_password') }}
                 </PrimaryButton>
             </div>
         </form>
