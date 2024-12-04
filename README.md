@@ -16,7 +16,7 @@
 - Reservation system ✅
 - Notifications/Email ✅
 - Switch Language (PL/ENG) ✅
-- Refactor Docker configuration ⏳
+- Refactor Docker configuration ✅
 - Improve UI ⏳
 - Set up CI/CD pipeline ⏳
 - Redis Cache ⏳
