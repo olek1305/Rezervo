@@ -19,3 +19,4 @@
 - Refactor Docker configuration ⏳
 - Improve UI ⏳
 - Set up CI/CD pipeline ⏳
+- Redis Cache ⏳
