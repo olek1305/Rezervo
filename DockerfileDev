@@ -1,15 +1,12 @@
 # Set up PHP 8.3 environment
 FROM php:8.3-cli
 
-# Added system dependencies (git, curl, zip, unzip)
+# Added system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     zip \
-    unzip \
-    libsodium-dev \
-    libpq-dev \
-    supervisor
+    unzip
 
 # Installed PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql
