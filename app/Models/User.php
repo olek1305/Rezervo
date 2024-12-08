@@ -68,8 +68,24 @@ class User extends Authenticatable
         ];
     }
 
-    public function availabilities()
+    public function availabilities(): HasMany
     {
         return $this->hasMany(DoctorAvailability::class, 'doctor_id');
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function assignDoctorRole(User $user, string $specialization): void
+    {
+        if ($this->role !== 'admin') {
+            throw new \Exception('Only admins can assign the doctor role.');
+        }
+
+        $user->update([
+            'role' => 'doctor',
+            'specialization' => $specialization,
+        ]);
+    }
+
 }
