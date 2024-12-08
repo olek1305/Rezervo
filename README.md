@@ -18,5 +18,5 @@
 - Switch Language (PL/ENG) ✅
 - Refactor Docker configuration ✅
 - Improve UI ⏳
-- Set up CI/CD pipeline ⏳
+- CI/CD ✅
 - Redis Cache ⏳
