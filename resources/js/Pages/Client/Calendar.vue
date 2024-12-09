@@ -65,7 +65,7 @@ const goToToday = () => {
 const openReservationModal = (day) => {
     const today = new Date();
     if (day.date < today.setHours(0, 0, 0, 0)) {
-        alert("Nie możesz wybrać daty w przeszłości.");
+        alert("Nie możesz wybrać daty z przeszłości.");
         return;
     }
 

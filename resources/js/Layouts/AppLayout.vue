@@ -41,7 +41,7 @@ const { t } = useI18n();
                                     {{ t('dashboard') }}
                                 </NavLink>
                                 <NavLink :href="route('doctor.index')" :active="route().current('doctor.index')">
-                                    {{ t('doctors') }}
+                                    {{ t('Specjaliści') }}
                                 </NavLink>
                                 <NavLink
                                     v-if="$page.props.auth.user.role === 'doctor'"

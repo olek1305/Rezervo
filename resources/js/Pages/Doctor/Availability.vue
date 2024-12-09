@@ -139,10 +139,11 @@ const { t } = useI18n();
         >
             <template #default>
                 <div class="p-6">
-                    <h2 class="text-lg font-semibold mb-4">{{ t('add_availability') }}</h2>
+                    <h2 class="text-lg font-semibold mb-4" style="color: white;">{{ t('add_availability') }}</h2>
                     <form @submit.prevent="addAvailability" class="space-y-4">
                         <div>
-                            <label for="date" class="block font-medium">{{ t('date_label') }}</label>
+                            <label for="date" class="block font-medium" style="color: blue;">{{ t('date_label') }}</label>
+
                             <input
                                 v-model="newSlot.available_date"
                                 type="date"
@@ -152,7 +153,7 @@ const { t } = useI18n();
                             <div v-if="errors.available_date" class="text-red-500">{{ errors.available_date }}</div>
                         </div>
                         <div>
-                            <label for="start_time" class="block font-medium">{{ t('start_time_label') }}</label>
+                            <label for="start_time" class="block font-medium" style="color: blue;">{{ t('start_time_label') }}</label>
                             <input
                                 v-model="newSlot.start_time"
                                 type="time"
@@ -162,7 +163,7 @@ const { t } = useI18n();
                             <div v-if="errors.start_time" class="text-red-500">{{ errors.start_time }}</div>
                         </div>
                         <div>
-                            <label for="end_time" class="block font-medium">{{ t('end_time_label') }}</label>
+                            <label for="end_time" class="block font-medium" style="color: blue;">{{ t('end_time_label') }}</label>
                             <input
                                 v-model="newSlot.end_time"
                                 type="time"
@@ -199,8 +200,7 @@ const { t } = useI18n();
         >
             <template #default>
                 <div class="p-6">
-                    <h2 class="text-lg font-semibold">{{ t('delete_confirmation') }}</h2>
-                    <p class="mt-2">{{ t('confirm_delete_availability') }}</p>
+                  <h2 class="text-lg font-semibold" style="color: white;">{{ t('delete_confirmation') }}</h2>
                     <div class="mt-4 flex justify-end">
                         <button
                             class="bg-gray-300 text-black px-4 py-2 mr-2 rounded hover:bg-gray-400"

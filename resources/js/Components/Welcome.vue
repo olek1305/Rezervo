@@ -1,22 +1,13 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { Link} from '@inertiajs/vue3';
 </script>
 
 <template>
   <div class="min-h-screen bg-gradient-to-r from-teal-100 to-teal-300 dark:from-teal-800 dark:to-teal-900 text-white flex flex-col items-center">
     <!-- Sticky Navbar -->
     <nav class="w-full fixed top-0 left-0 bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 dark:from-teal-700 dark:via-teal-800 dark:to-teal-900 text-white shadow-lg z-10">
-      <div class="max-w-7xl mx-auto px-6 py-4">
-        <div class="flex justify-between items-center">
-          <a href="#" class="font-bold text-lg">System Rezerwacji</a>
-          <div class="space-x-6">
-            <a href="#features" class="hover:text-teal-200 transition-all">Funkcje</a>
-            <a href="#pricing" class="hover:text-teal-200 transition-all">Cennik</a>
-            <a href="#contact" class="hover:text-teal-200 transition-all">Kontakt
-            </a>
-          </div>
-        </div>
-      </div>
+
     </nav>
 
     <!-- Hero Section -->
@@ -25,10 +16,11 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
         System rezerwacji
       </h1>
       <p class="mt-6 text-xl sm:text-2xl text-gray-600 dark:text-gray-300 opacity-90 animate__animated animate__fadeIn animate__delay-1s">
-        tuuuu potem wpisze cos teraz to mam male nozki
+        Witaj w systemie rezerwacji!
       </p>
       <a href="#features" class="mt-8 inline-block bg-teal-600 hover:bg-teal-500 py-4 px-8 rounded-xl text-lg font-semibold text-white transition-all transform hover:scale-105">
-        Rozpocznij teraz
+       
+        <Link :href="route('doctor.index')">Rozpocznij teraz</Link>
       </a>
     </section>
 
@@ -73,17 +65,6 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- Call to Action Section -->
-    <section class="py-20 bg-teal-600 dark:bg-teal-800 text-center text-white">
-      <h2 class="text-3xl sm:text-4xl font-extrabold animate__animated animate__fadeIn">Gotowy, aby zacząć?</h2>
-      <p class="mt-4 text-lg opacity-80 animate__animated animate__fadeIn animate__delay-1s">
-        Dołącz teraz i zyskaj pełną kontrolę nad swoimi rezerwacjami.
-      </p>
-      <a href="#" class="mt-8 inline-block bg-teal-700 hover:bg-teal-600 py-4 px-8 rounded-xl text-lg font-semibold text-white transition-all transform hover:scale-105">
-        Rozpocznij teraz
-      </a>
     </section>
   </div>
 </template>
