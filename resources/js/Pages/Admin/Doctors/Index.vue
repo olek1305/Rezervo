@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import Modal from "@/Components/Modal.vue";
+import {useI18n} from "vue-i18n";
 
 
 const props = defineProps({
@@ -45,6 +46,7 @@ function removeDoctor() {
         },
     });
 }
+const { t } = useI18n();
 </script>
 
 <template>
