@@ -35,111 +35,94 @@ const { t } = useI18n();
 <template>
     <Head :title="t('log_in')" />
 
-    <!-- Strona z gradientowym tłem -->
-    <div class="min-h-screen bg-gray-800 flex items-center ">
-        <!-- Sekcja po lewej stronie -->
-        <div class="hidden lg:block w-1/3 text-white px-8 space-y-6">
-            <h2 class="text-4xl font-bold">Witaj w naszym systemie rezerwacji!</h2>
-            <p class="text-lg">
-                Zarządzaj rezerwacjami szybko i wygodnie w jednym miejscu. Bezpieczny i nowoczesny system dostosowany do Twoich potrzeb.
-            </p>
-            <ul class="list-disc list-inside space-y-2 text-lg">
-                <li>Intuicyjny interfejs</li>
-                <li>Szybki dostęp do rezerwacji</li>
-                <li>Zabezpieczone dane użytkowników</li>
-            </ul>
-        </div>
-
-        <!-- Panel logowania -->
-        <div class="flex justify-center lg:w-2/3">
-            <AuthenticationCard class="max-w-sm w-full p-6 bg-white rounded-lg shadow-xl">
-                <template #logo>
-                    <AuthenticationCardLogo />
-                </template>
-
-                <!-- Tytuł strony -->
-                <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
-                    System rezerwacji
-                </h1>
-
-                <!-- Status -->
-                <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                    {{ status }}
+    <div class="h-screen bg-gray-800 flex items-center justify-center">
+        <div class="flex w-4/5 p-8 rounded-lg">
+            <!-- Sekcja tekstu -->
+            <div class="w-1/2 text-white px-6 flex flex-col justify-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Witaj w naszym systemie rezerwacji!</h2>
+                    <p class="text-lg mb-4">
+                        Zarządzaj rezerwacjami szybko i wygodnie w jednym miejscu. Bezpieczny i nowoczesny system dostosowany do Twoich potrzeb.
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 text-lg">
+                        <li>Intuicyjny interfejs</li>
+                        <li>Szybki dostęp do rezerwacji</li>
+                        <li>Zabezpieczone dane użytkowników</li>
+                    </ul>
                 </div>
+            </div>
 
-                <!-- Formularz logowania -->
-                <form @submit.prevent="submit">
-                    <div>
-                        <InputLabel for="email" value="Email" />
-                        <TextInput
-                            id="email"
-                            v-model="form.email"
-                            type="email"
-                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                            required
-                            autofocus
-                            autocomplete="username"
-                        />
-                        <InputError class="mt-2" :message="form.errors.email" />
+            <!-- Sekcja logowania -->
+            <div class="w-1/2 flex justify-center">
+                <AuthenticationCard class="w-full max-w-md p-8 bg-white shadow-xl">
+                    <template #logo>
+                        <AuthenticationCardLogo />
+                    </template>
+
+                    <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
+                        System rezerwacji
+                    </h1>
+
+                    <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                        {{ status }}
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="password" value="Password" />
-                        <TextInput
-                            id="password"
-                            v-model="form.password"
-                            type="password"
-                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                            required
-                            autocomplete="current-password"
-                        />
-                        <InputError class="mt-2" :message="form.errors.password" />
-                    </div>
+                    <form @submit.prevent="submit">
+                        <div>
+                            <InputLabel for="email" value="Email" />
+                            <TextInput
+                                id="email"
+                                v-model="form.email"
+                                type="email"
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                required
+                                autofocus
+                                autocomplete="username"
+                            />
+                            <InputError class="mt-2" :message="form.errors.email" />
+                        </div>
 
-                    <div class="block mt-4">
-                        <label class="flex items-center">
-                            <Checkbox v-model:checked="form.remember" name="remember" />
-                            <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ t('Zapamiętaj mnie') }}</span>
-                        </label>
-                    </div>
+                        <div class="mt-4">
+                            <InputLabel for="password" value="Password" />
+                            <TextInput
+                                id="password"
+                                v-model="form.password"
+                                type="password"
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                required
+                                autocomplete="current-password"
+                            />
+                            <InputError class="mt-2" :message="form.errors.password" />
+                        </div>
 
-                    <!-- Link do resetowania hasła oraz przycisk logowania -->
-                    <div class="flex items-center justify-between mt-4">
-                        <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ t('forgot_password') }}
-                        </Link>
+                        <div class="block mt-4">
+                            <label class="flex items-center">
+                                <Checkbox v-model:checked="form.remember" name="remember" />
+                                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ t('Zapamiętaj mnie') }}</span>
+                            </label>
+                        </div>
 
-                        <PrimaryButton class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                            {{ t('log_in') }}
-                        </PrimaryButton>
-                    </div>
-                </form>
-            </AuthenticationCard>
+                        <div class="flex items-center justify-between mt-4">
+                            <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                                {{ t('forgot_password') }}
+                            </Link>
+
+                            <PrimaryButton class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                {{ t('log_in') }}
+                            </PrimaryButton>
+                        </div>
+                    </form>
+                </AuthenticationCard>
+            </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-/* Tło gradientowe */
-body {
-    font-family: 'Inter', sans-serif;
-}
-
-.min-h-screen {
-    min-height: 100vh;
-}
-
-/* Tło zmienione na kolor zgodny z tytułem */
-.bg-indigo-700 {
-    background-color: #4C51BF; /* Zbliżony kolor */
-}
-
-/* Tytuł strony */
-h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: #4C51BF;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
 }
 </style>
