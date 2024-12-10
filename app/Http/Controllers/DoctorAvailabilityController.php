@@ -6,6 +6,7 @@ use App\Models\DoctorAvailability;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
@@ -14,8 +15,13 @@ class DoctorAvailabilityController extends Controller
 {
     public function index(): Response|ResponseFactory
     {
-        // Fetch the doctor's availability slots
-        $availabilities = DoctorAvailability::where('doctor_id', Auth::id())->get();
+        $doctorId = Auth::id();
+
+        $availabilities = Cache::remember("doctor_{$doctorId}_availabilities", 600, function () use ($doctorId) {
+            return DoctorAvailability::where('doctor_id', $doctorId)
+                ->where('available_date', '>=', now()->format('Y-m-d'))
+                ->get();
+        });
 
         return inertia('Doctor/Availability', [
             'availabilities' => $availabilities,
@@ -41,6 +47,8 @@ class DoctorAvailabilityController extends Controller
             'end_time' => $request->end_time,
         ]);
 
+        Cache::forget("doctor_" . Auth::id() . "_availabilities");
+
         return back()->with('success', 'Availability added successfully.');
     }
 
@@ -53,6 +61,8 @@ class DoctorAvailabilityController extends Controller
         }
 
         $availability->delete();
+
+        Cache::forget("doctor_" . Auth::id() . "_availabilities");
 
         return back()->with('success', 'Availability removed successfully.');
     }

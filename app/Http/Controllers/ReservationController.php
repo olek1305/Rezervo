@@ -9,10 +9,19 @@ use App\Notifications\ReservationCreatedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
+    /**
+     * Generate a cache key for doctor data.
+     */
+    private function generateCacheKey(int $doctorId, string $type): string
+    {
+        return "doctor_{$doctorId}_{$type}";
+    }
+
     /**
      * Book a reservation for a specific doctor and time slot.
      */
@@ -25,6 +34,9 @@ class ReservationController extends Controller
         ]);
 
         $doctor = User::findOrFail($request->doctor_id);
+
+        $availabilitiesCacheKey = $this->generateCacheKey($request->doctor_id, 'availabilities');
+        $calendarCacheKey = $this->generateCacheKey($request->doctor_id, 'calendar');
 
         $isAvailable = DoctorAvailability::where('doctor_id', $request->doctor_id)
             ->where('available_date', $request->reservation_date)
@@ -61,6 +73,9 @@ class ReservationController extends Controller
             'reservation_time' => $request->reservation_time,
         ]);
 
+        Cache::forget($availabilitiesCacheKey);
+        Cache::forget($calendarCacheKey);
+
         $reservationDetails = [
             'doctor_name' => $doctor->name,
             'specialization' => $doctor->specialization,
@@ -80,12 +95,18 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::findOrFail($id);
 
-        // Only allow the user who created the reservation to cancel it
         if ($reservation->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
+        $doctorId = $reservation->doctor_id;
+        $availabilitiesCacheKey = $this->generateCacheKey($doctorId, 'availabilities');
+        $calendarCacheKey = $this->generateCacheKey($doctorId, 'calendar');
+
         $reservation->delete();
+
+        Cache::forget($availabilitiesCacheKey);
+        Cache::forget($calendarCacheKey);
 
         return response()->json(['message' => 'Reservation canceled successfully.']);
     }

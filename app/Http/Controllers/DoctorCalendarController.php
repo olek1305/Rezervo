@@ -8,12 +8,21 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DoctorCalendarController extends Controller
 {
+    /**
+     * Generate a cache key for doctor data.
+     */
+    private function generateCacheKey(int $doctorId, string $type): string
+    {
+        return "doctor_{$doctorId}_{$type}";
+    }
+
     /**
      * Index of doctor availabilities for the authenticated doctor.
      */
@@ -23,7 +32,12 @@ class DoctorCalendarController extends Controller
             abort(403, 'Access denied.');
         }
 
-        $availabilities = DoctorAvailability::where('doctor_id', Auth::id())->get();
+        $doctorId = Auth::id();
+        $cacheKey = $this->generateCacheKey($doctorId, 'availabilities');
+
+        $availabilities = Cache::remember($cacheKey, 600, function () use ($doctorId) {
+            return DoctorAvailability::where('doctor_id', $doctorId)->get();
+        });
 
         return Inertia::render('Doctor/Calendar', [
             'availabilities' => $availabilities,
@@ -37,42 +51,51 @@ class DoctorCalendarController extends Controller
     public function show($id): Response
     {
         $doctor = User::findOrFail($id);
+        $cacheKey = $this->generateCacheKey($id, 'calendar');
 
-        $availability = DoctorAvailability::where('doctor_id', $id)
-            ->whereDate('available_date', '>=', today())
-            ->get();
+        $calendarData = Cache::remember($cacheKey, 600, function () use ($id) {
+            $availability = DoctorAvailability::where('doctor_id', $id)
+                ->whereDate('available_date', '>=', today())
+                ->get();
 
-        $reservations = Reservation::where('doctor_id', $id)
-            ->whereDate('reservation_date', '>=', today())
-            ->get()
-            ->groupBy('reservation_date')
-            ->map(fn ($res) => $res->pluck('reservation_time')->toArray());
+            $reservations = Reservation::where('doctor_id', $id)
+                ->whereDate('reservation_date', '>=', today())
+                ->get()
+                ->groupBy('reservation_date')
+                ->map(fn ($res) => $res->pluck('reservation_time')->toArray());
 
-        $timeSlots = collect($availability)->mapWithKeys(function ($slot) {
-            $date = (new \DateTime($slot->available_date))->format('Y-m-d');
-            $currentTime = new \DateTime($slot->start_time);
-            $endTime = new \DateTime($slot->end_time);
+            $timeSlots = collect($availability)->mapWithKeys(function ($slot) {
+                $date = (new \DateTime($slot->available_date))->format('Y-m-d');
+                $currentTime = new \DateTime($slot->start_time);
+                $endTime = new \DateTime($slot->end_time);
 
-            $slots = [];
-            while ($currentTime < $endTime) {
-                $slots[] = $currentTime->format('H:i');
-                $currentTime->modify('+30 minutes');
-            }
+                $slots = [];
+                while ($currentTime < $endTime) {
+                    $slots[] = $currentTime->format('H:i');
+                    $currentTime->modify('+30 minutes');
+                }
 
-            return [$date => $slots];
-        })->toArray();
+                return [$date => $slots];
+            })->toArray();
 
-        $allDates = collect($availability)->pluck('available_date')->map(fn ($date) => (new \DateTime($date))->format('Y-m-d'));
+            $allDates = collect($availability)->pluck('available_date')->map(fn ($date) => (new \DateTime($date))->format('Y-m-d'));
 
-        $timeSlots = $allDates->mapWithKeys(fn ($date) => [$date => $timeSlots[$date] ?? []])->toArray();
-        $reservations = $allDates->mapWithKeys(fn ($date) => [$date => $reservations[$date] ?? []])->toArray();
+            $timeSlots = $allDates->mapWithKeys(fn ($date) => [$date => $timeSlots[$date] ?? []])->toArray();
+            $reservations = $allDates->mapWithKeys(fn ($date) => [$date => $reservations[$date] ?? []])->toArray();
+
+            return [
+                'availability' => $availability,
+                'timeSlots' => $timeSlots,
+                'reservations' => $reservations,
+            ];
+        });
 
         return Inertia::render('Client/Calendar', [
             'doctorId' => $id,
             'doctorName' => $doctor->name,
-            'availability' => $availability,
-            'timeSlots' => $timeSlots,
-            'reservations' => $reservations,
+            'availability' => $calendarData['availability'],
+            'timeSlots' => $calendarData['timeSlots'],
+            'reservations' => $calendarData['reservations'],
         ]);
     }
 
@@ -97,6 +120,10 @@ class DoctorCalendarController extends Controller
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
         ]);
+
+        $doctorId = Auth::id();
+        Cache::forget($this->generateCacheKey($doctorId, 'availabilities'));
+        Cache::forget($this->generateCacheKey($doctorId, 'calendar'));
 
         return response()->json(['message' => 'Availability created successfully.'], 201);
     }
