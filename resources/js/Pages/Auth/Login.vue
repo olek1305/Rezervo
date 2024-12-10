@@ -36,7 +36,7 @@ const { t } = useI18n();
     <Head :title="t('log_in')" />
 
     <!-- Strona z gradientowym tłem -->
-    <div class="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center">
+    <div class="min-h-screen bg-gray-800 flex items-center ">
         <!-- Sekcja po lewej stronie -->
         <div class="hidden lg:block w-1/3 text-white px-8 space-y-6">
             <h2 class="text-4xl font-bold">Witaj w naszym systemie rezerwacji!</h2>
@@ -51,76 +51,70 @@ const { t } = useI18n();
         </div>
 
         <!-- Panel logowania -->
-        <AuthenticationCard class="max-w-sm w-full p-6 bg-white rounded-lg shadow-xl">
-            <template #logo>
-                <AuthenticationCardLogo />
-            </template>
+        <div class="flex justify-center lg:w-2/3">
+            <AuthenticationCard class="max-w-sm w-full p-6 bg-white rounded-lg shadow-xl">
+                <template #logo>
+                    <AuthenticationCardLogo />
+                </template>
 
-            <!-- Tytuł strony -->
-            <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
-                System rezerwacji
-            </h1>
+                <!-- Tytuł strony -->
+                <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
+                    System rezerwacji
+                </h1>
 
-            <!-- Status -->
-            <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                {{ status }}
-            </div>
-
-            <!-- Formularz logowania -->
-            <form @submit.prevent="submit">
-                <div>
-                    <InputLabel for="email" value="Email" />
-                    <TextInput
-                        id="email"
-                        v-model="form.email"
-                        type="email"
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        required
-                        autofocus
-                        autocomplete="username"
-                    />
-                    <InputError class="mt-2" :message="form.errors.email" />
+                <!-- Status -->
+                <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                    {{ status }}
                 </div>
 
-                <div class="mt-4">
-                    <InputLabel for="password" value="Password" />
-                    <TextInput
-                        id="password"
-                        v-model="form.password"
-                        type="password"
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        required
-                        autocomplete="current-password"
-                    />
-                    <InputError class="mt-2" :message="form.errors.password" />
-                </div>
+                <!-- Formularz logowania -->
+                <form @submit.prevent="submit">
+                    <div>
+                        <InputLabel for="email" value="Email" />
+                        <TextInput
+                            id="email"
+                            v-model="form.email"
+                            type="email"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                            autofocus
+                            autocomplete="username"
+                        />
+                        <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
 
-                <div class="block mt-4">
-                    <label class="flex items-center">
-                        <Checkbox v-model:checked="form.remember" name="remember" />
-                        <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ t('Zapamiętaj mnie') }}</span>
-                    </label>
-                </div>
+                    <div class="mt-4">
+                        <InputLabel for="password" value="Password" />
+                        <TextInput
+                            id="password"
+                            v-model="form.password"
+                            type="password"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            required
+                            autocomplete="current-password"
+                        />
+                        <InputError class="mt-2" :message="form.errors.password" />
+                    </div>
 
-                <!-- Link do resetowania hasła oraz przycisk logowania -->
-                <div class="flex items-center justify-between mt-4">
-                    <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                        {{ t('forgot_password') }}
-                    </Link>
+                    <div class="block mt-4">
+                        <label class="flex items-center">
+                            <Checkbox v-model:checked="form.remember" name="remember" />
+                            <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ t('Zapamiętaj mnie') }}</span>
+                        </label>
+                    </div>
 
-                    <PrimaryButton class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        {{ t('log_in') }}
-                    </PrimaryButton>
-                </div>
-            </form>
-        </AuthenticationCard>
+                    <!-- Link do resetowania hasła oraz przycisk logowania -->
+                    <div class="flex items-center justify-between mt-4">
+                        <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                            {{ t('forgot_password') }}
+                        </Link>
 
-        <!-- Sekcja po prawej stronie -->
-        <div class="hidden lg:block w-1/3 px-8">
-            <img src="https://via.placeholder.com/300x300" alt="Grafika rezerwacji" class="rounded-lg shadow-lg mb-4">
-            <p class="text-white text-lg">
-                Dołącz do tysięcy zadowolonych użytkowników, którzy zaufali naszemu systemowi rezerwacji. Twoja wygoda to nasz priorytet!
-            </p>
+                        <PrimaryButton class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            {{ t('log_in') }}
+                        </PrimaryButton>
+                    </div>
+                </form>
+            </AuthenticationCard>
         </div>
     </div>
 </template>
@@ -135,8 +129,9 @@ body {
     min-height: 100vh;
 }
 
-.bg-gradient-to-r {
-    background: linear-gradient(135deg, #6EE7B7, #3B82F6);
+/* Tło zmienione na kolor zgodny z tytułem */
+.bg-indigo-700 {
+    background-color: #4C51BF; /* Zbliżony kolor */
 }
 
 /* Tytuł strony */
