@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { ref, computed } from "vue";
+import {ref, computed, onMounted} from "vue";
 import { usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import Modal from "@/Components/Modal.vue";
@@ -9,8 +9,8 @@ import {useI18n} from "vue-i18n";
 const page = usePage();
 const doctorId = computed(() => page.props.doctorId);
 const doctorName = computed(() => page.props.doctorName);
-const timeSlots = computed(() => page.props.timeSlots || {});
 
+const reservations = ref([]);
 const isLoading = ref(false);
 const currentDate = ref(new Date());
 const selectedDay = ref(null);
@@ -21,6 +21,7 @@ const reservedDetails = ref({
     date: null,
     time: null,
 });
+const timeSlots = computed(() => page.props.timeSlots || {});
 
 // Format date to YYYY-MM-DD
 const formatDate = (date) => date.toISOString().split("T")[0];
@@ -65,7 +66,7 @@ const goToToday = () => {
 const openReservationModal = (day) => {
     const today = new Date();
     if (day.date < today.setHours(0, 0, 0, 0)) {
-        alert("Nie możesz wybrać daty z przeszłości.");
+        alert(t('invalid_date'));
         return;
     }
 
@@ -76,7 +77,7 @@ const openReservationModal = (day) => {
 // Booking an appointment
 const bookAppointment = async () => {
     if (!selectedDay.value || !selectedTime.value) {
-        error.value = "Proszę wybrać datę i godzinę.";
+        error.value = t('choose_date_and_time');
         return;
     }
 
@@ -118,12 +119,42 @@ const calculateSlotAvailability = (date) => {
     };
 };
 
+// Cancel an appointment
+const cancelReservation = async (reservationId) => {
+    if (!confirm(t('confirm_action'))) return;
+
+    isLoading.value = true;
+
+    try {
+        await axios.delete(`/reservations/${reservationId}`);
+        // Remove the canceled reservation from the list
+        reservations.value = reservations.value.filter((r) => r.id !== reservationId);
+        alert(t('cancel_appointment'));
+    } catch (error) {
+        console.error(t('reservation_failed'), error);
+        alert(t('reservation_failed'));
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const fetchReservations = async () => {
+    try {
+        const response = await axios.get('/reservations');
+        reservations.value = response.data.reservations;
+    } catch (error) {
+        console.error(t('reservation_failed'), error);
+    }
+};
+
+onMounted(fetchReservations);
+
 const { t } = useI18n();
 </script>
 
 <template>
     <AppLayout :title="t('doctor_calendar_title', { doctorName })">
-        <div class="py-12">
+        <div class="py-4">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-900 dark:text-gray-100 overflow-hidden shadow-lg rounded-lg">
                     <!-- Header -->
@@ -238,5 +269,41 @@ const { t } = useI18n();
                 </div>
             </template>
         </Modal>
+
+        <!-- User's reservations -->
+        <div v-if="reservations.length">
+            <ul>
+                <li
+                    v-for="reservation in reservations"
+                    :key="reservation.id"
+                    class="flex justify-between items-center p-4 bg-white dark:bg-gray-700 rounded mb-2"
+                >
+                    <div>
+                        <p>
+                            <strong>{{ t('date') }}:</strong> {{ reservation.reservation_date }}
+                        </p>
+                        <p>
+                            <strong>{{ t('time') }}:</strong> {{ reservation.reservation_time }}
+                        </p>
+                        <p>
+                            <strong>{{ t('doctor') }}:</strong> {{ reservation.doctor.name }}
+                        </p>
+                    </div>
+                    <button
+                        class="btn bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600"
+                        :disabled="isLoading"
+                        @click="cancelReservation(reservation.id)"
+                    >
+                        <span v-if="isLoading">{{ t('loading') }}</span>
+                        <span v-else>{{ t('cancel_appointment') }}</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div v-else>
+            <p>{{ t('no_appointments') }}</p>
+        </div>
     </AppLayout>
 </template>
+

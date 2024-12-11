@@ -35,8 +35,10 @@ Route::middleware([
 
     // Customer calendar view and bookings
     Route::middleware('auth')->group(function () {
+        Route::get('/reservations', [ReservationController::class, 'index']);
         Route::get('/doctor/{id}/calendar', [DoctorCalendarController::class, 'show'])->name('client.calendar');
         Route::post('/reservations', [ReservationController::class, 'store'])->name('reservation.store');
+        Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
     });
 
     // Management of physician availability

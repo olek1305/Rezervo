@@ -51,53 +51,36 @@ class DoctorCalendarController extends Controller
     public function show($id): Response
     {
         $doctor = User::findOrFail($id);
-        $cacheKey = $this->generateCacheKey($id, 'calendar');
 
-        $calendarData = Cache::remember($cacheKey, 600, function () use ($id) {
-            $availability = DoctorAvailability::where('doctor_id', $id)
-                ->whereDate('available_date', '>=', today())
-                ->get();
-
-            $reservations = Reservation::where('doctor_id', $id)
-                ->whereDate('reservation_date', '>=', today())
-                ->get()
-                ->groupBy('reservation_date')
-                ->map(fn ($res) => $res->pluck('reservation_time')->toArray());
-
-            $timeSlots = collect($availability)->mapWithKeys(function ($slot) {
+        $timeSlots = DoctorAvailability::where('doctor_id', $id)
+            ->whereDate('available_date', '>=', today())
+            ->get()
+            ->mapWithKeys(function ($slot) {
                 $date = (new \DateTime($slot->available_date))->format('Y-m-d');
-                $currentTime = new \DateTime($slot->start_time);
+                $startTime = new \DateTime($slot->start_time);
                 $endTime = new \DateTime($slot->end_time);
 
                 $slots = [];
-                while ($currentTime < $endTime) {
-                    $slots[] = $currentTime->format('H:i');
-                    $currentTime->modify('+30 minutes');
+                while ($startTime < $endTime) {
+                    $slots[] = $startTime->format('H:i');
+                    $startTime->modify('+30 minutes');
                 }
 
                 return [$date => $slots];
-            })->toArray();
-
-            $allDates = collect($availability)->pluck('available_date')->map(fn ($date) => (new \DateTime($date))->format('Y-m-d'));
-
-            $timeSlots = $allDates->mapWithKeys(fn ($date) => [$date => $timeSlots[$date] ?? []])->toArray();
-            $reservations = $allDates->mapWithKeys(fn ($date) => [$date => $reservations[$date] ?? []])->toArray();
-
-            return [
-                'availability' => $availability,
-                'timeSlots' => $timeSlots,
-                'reservations' => $reservations,
-            ];
-        });
+            });
 
         return Inertia::render('Client/Calendar', [
             'doctorId' => $id,
             'doctorName' => $doctor->name,
-            'availability' => $calendarData['availability'],
-            'timeSlots' => $calendarData['timeSlots'],
-            'reservations' => $calendarData['reservations'],
+            'timeSlots' => $timeSlots, // Dodanie timeSlots do props
+            'reservations' => Reservation::where('doctor_id', $id)
+                ->whereDate('reservation_date', '>=', today())
+                ->get()
+                ->groupBy('reservation_date')
+                ->map(fn ($res) => $res->pluck('reservation_time')),
         ]);
     }
+
 
     /**
      * Store a new availability entry for a doctor.

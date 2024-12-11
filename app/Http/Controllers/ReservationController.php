@@ -23,6 +23,25 @@ class ReservationController extends Controller
     }
 
     /**
+     *
+     */
+    public function index(): JsonResponse
+    {
+        $user = Auth::user();
+
+        $reservations = Reservation::where('user_id', $user->id)
+            ->select(['id', 'reservation_date', 'reservation_time', 'doctor_id'])
+            ->with('doctor:id,name')
+            ->orderBy('reservation_date')
+            ->get();
+
+        return response()->json([
+            'reservations' => $reservations,
+        ]);
+    }
+
+
+    /**
      * Book a reservation for a specific doctor and time slot.
      */
     public function store(Request $request): JsonResponse
@@ -99,14 +118,7 @@ class ReservationController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $doctorId = $reservation->doctor_id;
-        $availabilitiesCacheKey = $this->generateCacheKey($doctorId, 'availabilities');
-        $calendarCacheKey = $this->generateCacheKey($doctorId, 'calendar');
-
         $reservation->delete();
-
-        Cache::forget($availabilitiesCacheKey);
-        Cache::forget($calendarCacheKey);
 
         return response()->json(['message' => 'Reservation canceled successfully.']);
     }
