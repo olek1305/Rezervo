@@ -99,9 +99,12 @@ const bookAppointment = async () => {
         selectedDay.value = null;
         selectedTime.value = null;
     } catch (err) {
-        error.value = err.response?.data?.error || "Nie udało się zarezerwować terminu.";
+        error.value = err.response?.data?.error || (t('reservation_failed'));
     } finally {
         isLoading.value = false;
+        setTimeout(() => {
+            window.location.reload();
+        }, 2100);
     }
 };
 
@@ -130,11 +133,15 @@ const cancelReservation = async (reservationId) => {
         // Remove the canceled reservation from the list
         reservations.value = reservations.value.filter((r) => r.id !== reservationId);
         alert(t('cancel_appointment'));
+
     } catch (error) {
         console.error(t('reservation_failed'), error);
         alert(t('reservation_failed'));
     } finally {
         isLoading.value = false;
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     }
 };
 
