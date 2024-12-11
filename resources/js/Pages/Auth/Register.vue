@@ -8,6 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useI18n } from "vue-i18n";
+import LanguageSwitcher from "@/Components/LanguageSwitcher.vue";
 
 const form = useForm({
     name: '',
@@ -33,14 +34,14 @@ const { t } = useI18n();
         <div class="flex w-4/5 p-8 rounded-lg">
             <div class="w-1/2 text-white px-6 flex flex-col justify-center">
                 <div>
-                    <h2 class="text-4xl font-bold mb-6">Dołącz do naszego systemu rezerwacji!</h2>
+                    <h2 class="text-4xl font-bold mb-6">{{ t('join_system') }}</h2>
                     <p class="text-lg mb-4">
-                        Twórz konto, zarządzaj rezerwacjami i korzystaj z nowoczesnych funkcji zaprojektowanych z myślą o Twoich potrzebach.
+                        {{ t('join_system_description') }}
                     </p>
                     <ul class="list-disc pl-6 space-y-2 text-lg">
-                        <li>Rejestracja w kilka chwil</li>
-                        <li>Dostęp do historii rezerwacji</li>
-                        <li>Bezpieczeństwo danych użytkowników</li>
+                        <li>{{ t('feature_registration') }}</li>
+                        <li>{{ t('feature_history') }}</li>
+                        <li>{{ t('feature_security') }}</li>
                     </ul>
                 </div>
             </div>
@@ -131,6 +132,9 @@ const { t } = useI18n();
                             </PrimaryButton>
                         </div>
                     </form>
+                    <div class="pt-3 flex justify-center h-full">
+                        <LanguageSwitcher />
+                    </div>
                 </AuthenticationCard>
             </div>
         </div>

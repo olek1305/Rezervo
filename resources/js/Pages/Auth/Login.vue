@@ -8,6 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useI18n } from "vue-i18n";
+import LanguageSwitcher from "@/Components/LanguageSwitcher.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -39,7 +40,7 @@ const { t } = useI18n();
         <div class="flex w-4/5 p-8 rounded-lg">
             <div class="w-1/2 text-white px-6 flex flex-col justify-center">
                 <div>
-                    <h2 class="text-4xl font-bold mb-6">Witaj w naszym systemie rezerwacji!</h2>
+                    <h2 class="text-4xl font-bold mb-6">{{ t('welcome_log') }}</h2>
                 </div>
             </div>
 
@@ -50,7 +51,7 @@ const { t } = useI18n();
                     </template>
 
                     <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
-                        {{ t('login') }}
+                        {{ t('log_in') }}
                     </h1>
 
                     <form @submit.prevent="submit">
@@ -69,7 +70,7 @@ const { t } = useI18n();
                         </div>
 
                         <div class="mt-4">
-                            <InputLabel for="password" value="Password" />
+                            <InputLabel for="password" :value="t('password')" />
                             <TextInput
                                 id="password"
                                 v-model="form.password"
@@ -102,6 +103,9 @@ const { t } = useI18n();
                             </PrimaryButton>
                         </div>
                     </form>
+                    <div class="pt-3 flex justify-center h-full">
+                        <LanguageSwitcher />
+                    </div>
                 </AuthenticationCard>
             </div>
         </div>

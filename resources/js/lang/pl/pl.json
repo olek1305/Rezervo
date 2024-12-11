@@ -119,5 +119,11 @@
     "email": "E-mail",
     "email_unverified": "Twój adres e-mail nie został zweryfikowany.",
     "verification_email_sent": "Nowy link weryfikacyjny został wysłany na Twój adres e-mail.",
-    "loading": "Ładowanie..."
+    "loading": "Ładowanie...",
+    "join_system": "Dołącz do naszego systemu rezerwacji!",
+    "join_system_description": "Twórz konto, zarządzaj rezerwacjami i korzystaj z nowoczesnych funkcji zaprojektowanych z myślą o Twoich potrzebach.",
+    "feature_registration": "Rejestracja w kilka chwil",
+    "feature_history": "Dostęp do historii rezerwacji",
+    "feature_security": "Bezpieczeństwo danych użytkowników",
+    "welcome_log": "Witaj w naszym systemie rezerwacji!"
 }

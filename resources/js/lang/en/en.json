@@ -119,5 +119,11 @@
     "email": "Email",
     "email_unverified": "Your email address is unverified.",
     "verification_email_sent": "A new verification link has been sent to your email address.",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "join_system": "Join our reservation system!",
+    "join_system_description": "Create an account, manage your reservations, and use modern features designed to meet your needs.",
+    "feature_registration": "Quick registration",
+    "feature_history": "Access to reservation history",
+    "feature_security": "User data security",
+    "welcome_log": "Welcome to our reservation system!"
 }
