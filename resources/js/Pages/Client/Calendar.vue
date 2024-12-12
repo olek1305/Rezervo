@@ -165,53 +165,98 @@ const { t } = useI18n();
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-900 dark:text-gray-100 overflow-hidden shadow-lg rounded-lg">
                     <!-- Header -->
-                    <header class="flex justify-between items-center border-b px-6 py-4 bg-gray-100 dark:bg-gray-800">
-                        <h1 class="text-lg font-bold">{{ doctorName }}</h1>
+                    <header class="flex flex-col sm:flex-row justify-between items-center border-b px-4 sm:px-6 py-4 bg-gray-100 dark:bg-gray-800 space-y-2 sm:space-y-0">
+                        <h1 class="text-base sm:text-lg font-bold">{{ doctorName }}</h1>
                         <div class="flex space-x-4">
-                            <button @click="previousMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 ring-1 ring-black ring-opacity-5">
+                            <button @click="previousMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 ring-1 ring-black ring-opacity-5 text-xs sm:text-sm">
                                 {{ t('previous_month') }}
                             </button>
-                            <button @click="goToToday" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900">
+                            <button @click="goToToday" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 text-xs sm:text-sm">
                                 {{ t('today') }}
                             </button>
-                            <button @click="nextMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900">
+                            <button @click="nextMonth" class="btn cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-900 text-xs sm:text-sm">
                                 {{ t('next_month') }}
                             </button>
                         </div>
                     </header>
 
                     <!-- Calendar grid -->
-                    <div class="grid grid-cols-7 gap-2 p-6 text-black">
-                        <!-- Weekday headers -->
-                        <div v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day" class="text-center font-semibold dark:text-white">
-                            {{ day }}
-                        </div>
+                    <div class="p-4 sm:p-6 overflow-x-auto">
+                        <div class="grid grid-cols-7 gap-2 text-black min-w-[600px]">
+                            <!-- Weekday headers -->
+                            <div
+                                v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']"
+                                :key="day"
+                                class="text-center font-semibold text-[10px] md:text-[9px] lg:text-sm dark:text-white">
+                                {{ day }}
+                            </div>
 
-                        <!-- Days of the month -->
-                        <div
-                            v-for="day in days"
-                            :key="day.date"
-                            class="p-4 border rounded-lg cursor-pointer h-28"
-                            :class="{
-                                'bg-green-100 hover:bg-green-200': day.isCurrentMonth && calculateSlotAvailability(day.date).availableSlots.length > 0,
-                                'bg-red-100 hover:bg-red-200': day.isCurrentMonth && calculateSlotAvailability(day.date).availableSlots.length === 0,
-                                'bg-gray-100 text-gray-400': !day.isCurrentMonth,
-                                'cursor-not-allowed': day.date < new Date().setHours(0, 0, 0, 0),
-                                'border-blue-500 border-4': selectedDay === formatDate(day.date)
-                            }"
-                            @click="openReservationModal(day)"
-                        >
-                            <span class="block">{{ day.date.getDate() }}</span>
+                            <!-- Days of the month -->
+                            <div
+                                v-for="day in days"
+                                :key="day.date"
+                                class="relative p-1 md:p-2 lg:p-4 border rounded-lg cursor-pointer h-16 sm:h-20 flex flex-col"
+                                :class="{
+                                    'bg-green-100 hover:bg-green-200': day.isCurrentMonth && calculateSlotAvailability(day.date).availableSlots.length > 0,
+                                    'bg-red-100 hover:bg-red-200': day.isCurrentMonth && calculateSlotAvailability(day.date).availableSlots.length === 0,
+                                    'bg-gray-100 text-gray-400': !day.isCurrentMonth,
+                                    'cursor-not-allowed': day.date < new Date().setHours(0, 0, 0, 0),
+                                    'border-blue-500 border-4': selectedDay === formatDate(day.date)
+                                    }"
+                                    @click="openReservationModal(day)"
+                                    >
+                                <!-- Date number -->
+                                <span class="absolute top-1 left-1 text-[14px] font-semibold truncate z-10">
+                                    {{ day.date.getDate() }}
+                                </span>
 
-                            <!-- Display the number of available and reserved slots -->
-                            <div v-if="calculateSlotAvailability(day.date).totalSlots > 0" class="text-sm mt-2">
-                                <p class="text-green-800">
-                                    {{ t('available') }}: {{ calculateSlotAvailability(day.date).availableSlots.length }}
-                                </p>
-                                <p class="text-red-800">{{ t('reserved') }}: {{ calculateSlotAvailability(day.date).reservedSlots }}</p>
+                                <!-- Availability info -->
+                                <div v-if="calculateSlotAvailability(day.date).totalSlots > 0" class="absolute bottom-1 right-1 text-[11px] md:text-[12px] text-right z-0">
+                                    <p class="text-green-800 truncate">
+                                        {{ t('available') }}: {{ calculateSlotAvailability(day.date).availableSlots.length }}
+                                    </p>
+                                    <p class="text-red-800 truncate">
+                                        {{ t('reserved') }}: {{ calculateSlotAvailability(day.date).reservedSlots }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- User's reservations -->
+                <div v-if="reservations.length">
+                    <ul>
+                        <li
+                            v-for="reservation in reservations"
+                            :key="reservation.id"
+                            class="flex justify-between items-center p-4 bg-white dark:bg-gray-700 dark:text-white rounded mb-2"
+                        >
+                            <div>
+                                <p>
+                                    <strong>{{ t('date') }}:</strong> {{ reservation.reservation_date }}
+                                </p>
+                                <p>
+                                    <strong>{{ t('time') }}:</strong> {{ reservation.reservation_time }}
+                                </p>
+                                <p>
+                                    <strong>{{ t('doctor') }}:</strong> {{ reservation.doctor.name }}
+                                </p>
+                            </div>
+                            <button
+                                class="btn bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600 max-w-32"
+                                :disabled="isLoading"
+                                @click="cancelReservation(reservation.id)"
+                            >
+                                <span v-if="isLoading">{{ t('loading') }}</span>
+                                <span v-else>{{ t('cancel_appointment') }}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div v-else>
+                    <p class="dark:text-white text-center">{{ t('no_appointments') }}</p>
                 </div>
             </div>
         </div>
@@ -276,41 +321,6 @@ const { t } = useI18n();
                 </div>
             </template>
         </Modal>
-
-        <!-- User's reservations -->
-        <div v-if="reservations.length">
-            <ul>
-                <li
-                    v-for="reservation in reservations"
-                    :key="reservation.id"
-                    class="flex justify-between items-center p-4 bg-white dark:bg-gray-700 rounded mb-2"
-                >
-                    <div>
-                        <p>
-                            <strong>{{ t('date') }}:</strong> {{ reservation.reservation_date }}
-                        </p>
-                        <p>
-                            <strong>{{ t('time') }}:</strong> {{ reservation.reservation_time }}
-                        </p>
-                        <p>
-                            <strong>{{ t('doctor') }}:</strong> {{ reservation.doctor.name }}
-                        </p>
-                    </div>
-                    <button
-                        class="btn bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600"
-                        :disabled="isLoading"
-                        @click="cancelReservation(reservation.id)"
-                    >
-                        <span v-if="isLoading">{{ t('loading') }}</span>
-                        <span v-else>{{ t('cancel_appointment') }}</span>
-                    </button>
-                </li>
-            </ul>
-        </div>
-
-        <div v-else>
-            <p>{{ t('no_appointments') }}</p>
-        </div>
     </AppLayout>
 </template>
 
