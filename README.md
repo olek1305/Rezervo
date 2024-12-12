@@ -19,4 +19,5 @@
 - Refactor Docker configuration ✅
 - Improve UI ⏳
 - CI/CD ✅
-- Redis Cache ⏳
+- Redis Cache ✅
+- Responsive UI ⏳
