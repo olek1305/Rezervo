@@ -31,8 +31,8 @@ const { t } = useI18n();
     <Head :title="t('register')" />
 
     <div class="h-screen bg-gray-800 flex items-center justify-center">
-        <div class="flex w-4/5 p-8 rounded-lg">
-            <div class="w-1/2 text-white px-6 flex flex-col justify-center">
+        <div class="flex md:w-4/5 p-8">
+            <div class="w-1/2 text-white px-6 flex flex-col justify-center hidden sm:hidden md:flex">
                 <div>
                     <h2 class="text-4xl font-bold mb-6">{{ t('join_system') }}</h2>
                     <p class="text-lg mb-4">
@@ -46,13 +46,13 @@ const { t } = useI18n();
                 </div>
             </div>
 
-            <div class="w-1/2 flex justify-center">
+            <div class="sm:w-full md:w-1/2 flex justify-center">
                 <AuthenticationCard class="w-full max-w-md p-8 bg-white shadow-xl">
                     <template #logo>
                         <AuthenticationCardLogo />
                     </template>
 
-                    <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
+                    <h1 class="sm:text-2xl lg:text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
                         {{ t('register') }}
                     </h1>
 
@@ -127,7 +127,7 @@ const { t } = useI18n();
                                 {{ t('already_registered') }}
                             </Link>
 
-                            <PrimaryButton class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            <PrimaryButton class="sm:w-24 lg:w-36 ms-4 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                 {{ t('register') }}
                             </PrimaryButton>
                         </div>

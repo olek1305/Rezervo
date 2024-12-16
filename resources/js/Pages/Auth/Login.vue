@@ -37,20 +37,24 @@ const { t } = useI18n();
     <Head :title="t('log_in')" />
 
     <div class="h-screen bg-gray-800 flex items-center justify-center">
-        <div class="flex w-4/5 p-8 rounded-lg">
-            <div class="w-1/2 text-white px-6 flex flex-col justify-center">
+        <div class="flex md:w-4/5 p-8">
+            <div class="w-1/2 text-white px-6 flex flex-col justify-center hidden sm:hidden md:flex">
                 <div>
                     <h2 class="text-4xl font-bold mb-6">{{ t('welcome_log') }}</h2>
                 </div>
             </div>
 
-            <div class="w-1/2 flex justify-center">
+            <div class="sm:w-full md:w-1/2 flex justify-center">
                 <AuthenticationCard class="w-full max-w-md p-8 bg-white shadow-xl">
                     <template #logo>
                         <AuthenticationCardLogo />
                     </template>
 
-                    <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
+                    <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                        {{ status }}
+                    </div>
+
+                    <h1 class="sm:text-2xl lg:text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-6">
                         {{ t('log_in') }}
                     </h1>
 
@@ -89,21 +93,32 @@ const { t } = useI18n();
                             </label>
                         </div>
 
-                        <div class="flex items-center justify-between mt-4">
-                            <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                        <div class="flex flex-wrap items-center justify-center lg:justify-center gap-4 mt-4">
+                            <Link
+                                v-if="canResetPassword"
+                                :href="route('password.request')"
+                                class="text-sm lg:w-24 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 w-auto"
+                            >
                                 {{ t('forgot_password') }}
                             </Link>
 
-                            <Link :href="route('register')" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                            <Link
+                                :href="route('register')"
+                                class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            >
                                 {{ t('register') }}
                             </Link>
 
-                            <PrimaryButton class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            <PrimaryButton
+                                class="ms-4 px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200"
+                                :class="{ 'opacity-25': form.processing }"
+                                :disabled="form.processing"
+                            >
                                 {{ t('log_in') }}
                             </PrimaryButton>
                         </div>
                     </form>
-                    <div class="pt-3 flex justify-center h-full">
+                    <div class="pt-3 flex mx-auto justify-center">
                         <LanguageSwitcher />
                     </div>
                 </AuthenticationCard>
