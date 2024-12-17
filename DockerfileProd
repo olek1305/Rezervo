@@ -1,7 +1,7 @@
 # Set up PHP 8.3 environment
 FROM php:8.3-fpm
 
-# Added system dependencies (git, curl, zip, unzip)
+# Add system dependencies (git, curl, zip, unzip)
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -9,29 +9,33 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nginx
 
-# Installed PHP extensions
+# Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Installed Composer
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Setting up the working directory
+# Set up the working directory
 WORKDIR /var/www
 
-# Copying application files to an image
-COPY . .
+# Copy application files to image
+COPY . /var/www/
 
-# Installing application dependencies using Composer
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Install dependencies using Composer (without dev dependencies in production)
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-# Dodanie grupy i użytkownika 'admin'
+# Add admin user
 RUN groupadd -g 1000 admin && \
     useradd -u 1000 -ms /bin/bash -g admin admin
 
-# Added admin user with proper ownership
+# Set ownership
 RUN chown -R admin:admin /var/www
 
-# Set the user on which further commands will be executed
+# Switch to admin user
 USER admin
-# Set port
-EXPOSE 80
+
+# Expose port (PHP-FPM uses 9000 for FastCGI communication)
+EXPOSE 9000
+
+# Final CMD to run PHP-FPM
+CMD ["php-fpm"]
