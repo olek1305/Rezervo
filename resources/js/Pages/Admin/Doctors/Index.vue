@@ -2,11 +2,10 @@
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import Modal from "@/Components/Modal.vue";
-import {useI18n} from "vue-i18n";
-
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
-    users: Array,
+    users: Object,
     search: String,
 });
 
@@ -46,51 +45,58 @@ function removeDoctor() {
         },
     });
 }
+
+function goToPage(page) {
+    router.get(route('admin.doctors.index'), { search: localSearch.value, page });
+}
+
 const { t } = useI18n();
 </script>
 
 <template>
-    <div class="p-8 bg-gray-100 min-h-screen">
-        <h1 class="text-2xl font-bold mb-6">Zarządzanie lekarzami</h1>
+    <div class="p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen">
+        <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center sm:text-left">
+            Zarządzanie lekarzami
+        </h1>
 
         <!-- Search Engine -->
-        <form @submit.prevent="searchUsers" class="mb-6 flex gap-4">
+        <form @submit.prevent="searchUsers" class="mb-4 sm:mb-6 flex flex-wrap gap-4">
             <input
                 v-model="localSearch"
                 type="text"
                 placeholder="Wpisz imię lub email"
-                class="px-4 py-2 border border-gray-300 rounded shadow-sm w-full focus:ring focus:ring-blue-200"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded shadow-sm w-full sm:w-auto focus:ring focus:ring-blue-200"
             />
             <button
                 type="submit"
-                class="px-6 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
+                class="px-6 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 w-full sm:w-auto"
             >
                 {{ t('search') }}
             </button>
         </form>
 
         <!-- List Users -->
-        <div v-if="users.length" class="bg-white rounded shadow p-4">
+        <div v-if="users.data.length" class="bg-white rounded shadow p-4 sm:p-6">
             <ul>
                 <li
-                    v-for="user in users"
+                    v-for="user in users.data"
                     :key="user.id"
-                    class="flex justify-between items-center py-2 border-b last:border-b-0"
+                    class="flex flex-wrap sm:flex-nowrap justify-between items-center py-2 border-b last:border-b-0"
                 >
-                    <div>
-                        <p class="text-lg font-medium">{{ user.name }}</p>
-                        <p class="text-sm text-gray-500">{{ user.email }}</p>
+                    <div class="w-full sm:w-auto mb-2 sm:mb-0">
+                        <p class="text-lg font-medium text-center sm:text-left">{{ user.name }}</p>
+                        <p class="text-sm text-gray-500 text-center sm:text-left">{{ user.email }}</p>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2 justify-center sm:justify-end">
                         <button
                             @click="openAssignModal(user.id)"
-                            class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600"
+                            class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 w-full sm:w-auto"
                         >
                             {{ t('assign_role') }}
                         </button>
                         <button
                             @click="openRemoveModal(user.id)"
-                            class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
+                            class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600 w-full sm:w-auto"
                         >
                             {{ t('remove_role') }}
                         </button>
@@ -101,23 +107,33 @@ const { t } = useI18n();
         <div v-else class="text-center text-gray-500">
             {{ t('no_display') }}
         </div>
+        <div v-if="users.last_page > 1" class="flex justify-center gap-2 mt-4">
+            <button
+                v-for="page in users.last_page"
+                :key="page"
+                @click="goToPage(page)"
+                :class="['px-4 py-2 rounded shadow', page === users.current_page ? 'bg-blue-500 text-white' : 'bg-gray-300']"
+            >
+                {{ page }}
+            </button>
+        </div>
 
         <!-- Assign Role Modal -->
         <Modal :show="showAssignModal" @close="showAssignModal = false">
             <template v-slot>
-                <div class="p-6">
-                    <h2 class="text-lg font-bold mb-4">Potwierdź akcję</h2>
-                    <p>Czy na pewno chcesz nadać rolę Doctor temu użytkownikowi?</p>
-                    <div class="mt-4 flex justify-end gap-2">
+                <div class="p-6 max-w-md mx-auto">
+                    <h2 class="text-lg font-bold mb-4 text-center">{{ t('confirm_action') }}</h2>
+                    <p class="text-center">{{ t('ask_confirm_assign') }}</p>
+                    <div class="mt-4 flex flex-wrap justify-end gap-2">
                         <button
                             @click="showAssignModal = false"
-                            class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
+                            class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 w-full sm:w-auto"
                         >
                             {{ t('cancel') }}
                         </button>
                         <button
                             @click="assignDoctor"
-                            class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600"
+                            class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 w-full sm:w-auto"
                         >
                             {{ t('confirm') }}
                         </button>
@@ -129,19 +145,19 @@ const { t } = useI18n();
         <!-- Remove Role Modal -->
         <Modal :show="showRemoveModal" @close="showRemoveModal = false">
             <template v-slot>
-                <div class="p-6 dark:text-white">
-                    <h2 class="text-lg font-bold mb-4">{{ t('confirm_action') }}</h2>
-                    <p>{{ t('ask_role_to_confirm') }}</p>
-                    <div class="mt-4 flex justify-end gap-2">
+                <div class="p-6 max-w-md mx-auto">
+                    <h2 class="text-lg font-bold mb-4 text-center">{{ t('confirm_action') }}</h2>
+                    <p class="text-center">{{ t('ask_confirm_remove') }}</p>
+                    <div class="mt-4 flex flex-wrap justify-end gap-2">
                         <button
                             @click="showRemoveModal = false"
-                            class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400"
+                            class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 w-full sm:w-auto"
                         >
                             {{ t('cancel') }}
                         </button>
                         <button
                             @click="removeDoctor"
-                            class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600"
+                            class="px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600 w-full sm:w-auto"
                         >
                             {{ t('confirm') }}
                         </button>

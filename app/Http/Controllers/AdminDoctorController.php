@@ -22,7 +22,7 @@ class AdminDoctorController extends Controller
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             })
-            ->get();
+            ->paginate(50);
 
         return inertia('Admin/Doctors/Index', [
             'users' => $users,
