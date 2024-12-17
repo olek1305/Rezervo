@@ -112,16 +112,16 @@ const { t } = useI18n();
                             <li
                                 v-for="slot in availabilities"
                                 :key="slot.id"
-                                class="flex justify-between items-center border p-4 rounded bg-gray-50"
+                                class="flex justify-between items-center border p-4 rounded dark:bg-gray-800 dark:text-white"
                             >
                                 <div>
                                     {{ slot.available_date }}: {{ slot.start_time }} - {{ slot.end_time }}
                                 </div>
                                 <button
                                     @click="openDeleteModal(slot)"
-                                    class="text-red-500 hover:underline"
+                                    class="text-red-500 dark:text-red-400 hover:underline "
                                 >
-                                    {{ t('delete') }}
+                                   > {{ t('delete') }} <
                                 </button>
                             </li>
                         </ul>
