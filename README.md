@@ -17,7 +17,7 @@
 - Notifications/Email ✅
 - Switch Language (PL/ENG) ✅
 - Refactor Docker configuration ✅
-- Improve UI ⏳
+- Improve UI ✅
 - CI/CD ✅
 - Redis Cache ✅
-- Responsive UI ⏳
+- Responsive UI ✅
