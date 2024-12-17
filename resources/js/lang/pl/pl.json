@@ -134,5 +134,14 @@
     "enter_name_or_email": "Wpisz imię lub email",
     "role_assigned": "Rola Doctor została nadana.",
     "role_removed": "Rola Doctor została usunięta.",
-    "ask_confirm_remove": "Czy na pewno chcesz usunąć rolę Doctor?"
+    "ask_confirm_remove": "Czy na pewno chcesz usunąć rolę Doctor?",
+    "system_title": "System rezerwacji",
+    "system_welcome": "Witaj w systemie rezerwacji!",
+    "start_now": "Rozpocznij teraz",
+    "what_we_offer": "Co oferujemy?",
+    "easy_reservations": "Łatwe rezerwacje",
+    "easy_reservations_desc": "Prosty i intuicyjny system do zarządzania rezerwacjami online.",
+    "notifications_desc": "Automatyczne powiadomienia o nadchodzących rezerwacjach.",
+    "calendar_integration": "Integracja z kalendarzem",
+    "calendar_integration_desc": "Synchronizacja z kalendarzami, aby uniknąć podwójnych rezerwacji."
 }

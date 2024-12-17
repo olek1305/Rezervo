@@ -134,5 +134,14 @@
     "enter_name_or_email": "Enter name or email",
     "role_assigned": "Doctor role has been assigned.",
     "role_removed": "Doctor role has been removed.",
-    "ask_confirm_remove": "Are you sure you want to remove the Doctor role?"
+    "ask_confirm_remove": "Are you sure you want to remove the Doctor role?",
+    "system_title": "Reservation System",
+    "system_welcome": "Welcome to the reservation system!",
+    "start_now": "Start now",
+    "what_we_offer": "What do we offer?",
+    "easy_reservations": "Easy Reservations",
+    "easy_reservations_desc": "A simple and intuitive system for managing online reservations.",
+    "notifications_desc": "Automatic notifications about upcoming reservations.",
+    "calendar_integration": "Calendar Integration",
+    "calendar_integration_desc": "Synchronization with calendars to avoid double bookings."
 }
