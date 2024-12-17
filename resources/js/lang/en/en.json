@@ -129,5 +129,10 @@
     "cancel_appointment": "Cancellation of appointment",
     "scheduled_appointments": "Your Scheduled Appointments",
     "no_appointments": "You do not have any scheduled appointments.",
-    "doctor": "Doctor"
+    "doctor": "Doctor",
+    "manage_doctors": "Manage doctors",
+    "enter_name_or_email": "Enter name or email",
+    "role_assigned": "Doctor role has been assigned.",
+    "role_removed": "Doctor role has been removed.",
+    "ask_confirm_remove": "Are you sure you want to remove the Doctor role?"
 }
