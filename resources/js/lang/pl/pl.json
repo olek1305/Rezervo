@@ -20,7 +20,7 @@
     "cancel": "Anuluj",
     "confirm": "Potwierdź",
     "confirm_action": "Potwierdź akcję",
-    "ask_role_to_confirm": "Czy na pewno chcesz dodać rolę lekarza dla tego użytkownika?",
+    "ask_role_to_confirm": "Czy na pewno chcesz przypisać rolę lekarza dla tego użytkownika?",
     "ask_role_to_delete": "Czy na pewno chcesz usunąć rolę lekarza dla tego użytkownika?",
     "secure_area": "To jest bezpieczny obszar aplikacji. Potwierdź swoje hasło przed kontynuowaniem.",
     "forgot_password": "Zapomniałeś hasła?",
