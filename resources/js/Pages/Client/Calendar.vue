@@ -24,7 +24,11 @@ const reservedDetails = ref({
 const timeSlots = computed(() => page.props.timeSlots || {});
 
 // Format date to YYYY-MM-DD
-const formatDate = (date) => date.toISOString().split("T")[0];
+const formatDate = (date) => {
+    const localOffset = new Date(date).getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(date.getTime() - localOffset);
+    return adjustedDate.toISOString().split('T')[0];
+}
 
 // Function to get days in a month
 const getDaysInMonth = (date) => {
