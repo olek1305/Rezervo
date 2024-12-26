@@ -58,7 +58,7 @@
     "no_available_times": "No available times for the selected day.",
     "choose_date_and_time": "Please choose a date and time.",
     "reservation_failed": "Failed to book an appointment.",
-    "invalid_date": "You cannot select a date in the past.",
+    "invalid_date": "You cannot select a date from the past.",
     "manage_availability": "Manage Availability",
     "no_specialization_warning": "You do not have a specialization set, so you cannot set availability.",
     "date_label": "Date:",

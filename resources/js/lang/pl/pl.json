@@ -58,7 +58,7 @@
     "no_available_times": "Brak dostępnych godzin dla wybranego dnia.",
     "choose_date_and_time": "Proszę wybrać datę i godzinę.",
     "reservation_failed": "Nie udało się zarezerwować terminu.",
-    "invalid_date": "Nie możesz wybrać daty w przeszłości.",
+    "invalid_date": "Nie możesz wybrać daty z przeszłości.",
     "manage_availability": "Zarządzaj Dostępnością",
     "no_specialization_warning": "Nie posiadasz ustawionej specjalizacji, więc nie możesz ustawić terminu.",
     "date_label": "Data:",
