@@ -126,7 +126,7 @@ const { t } = useI18n();
                     <div class="p-6 max-w-md mx-auto dark:text-white">
                         <h2 class="text-lg font-bold mb-4 text-center">{{ t('confirm_action') }}</h2>
                         <p class="text-center">{{ t('ask_role_to_confirm') }}</p>
-                        <div class="mt-4 flex flex-wrap justify-end gap-2">
+                        <div class="mt-4 flex flex-wrap justify-center gap-2">
                             <button
                                 @click="showAssignModal = false"
                                 class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 w-full sm:w-auto"
@@ -147,10 +147,10 @@ const { t } = useI18n();
             <!-- Remove Role Modal -->
             <Modal :show="showRemoveModal" @close="showRemoveModal = false">
                 <template v-slot>
-                    <div class="p-6 max-w-md mx-auto">
+                    <div class="p-6 max-w-md mx-auto dark:text-white">
                         <h2 class="text-lg font-bold mb-4 text-center">{{ t('confirm_action') }}</h2>
                         <p class="text-center">{{ t('ask_confirm_remove') }}</p>
-                        <div class="mt-4 flex flex-wrap justify-end gap-2">
+                        <div class="mt-4 flex flex-wrap justify-center gap-2">
                             <button
                                 @click="showRemoveModal = false"
                                 class="px-4 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 w-full sm:w-auto"
