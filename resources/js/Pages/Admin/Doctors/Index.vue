@@ -123,9 +123,9 @@ const { t } = useI18n();
             <!-- Assign Role Modal -->
             <Modal :show="showAssignModal" @close="showAssignModal = false">
                 <template v-slot>
-                    <div class="p-6 max-w-md mx-auto">
+                    <div class="p-6 max-w-md mx-auto dark:text-white">
                         <h2 class="text-lg font-bold mb-4 text-center">{{ t('confirm_action') }}</h2>
-                        <p class="text-center">{{ t('ask_confirm_assign') }}</p>
+                        <p class="text-center">{{ t('ask_role_to_confirm') }}</p>
                         <div class="mt-4 flex flex-wrap justify-end gap-2">
                             <button
                                 @click="showAssignModal = false"
