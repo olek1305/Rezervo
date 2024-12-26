@@ -149,7 +149,7 @@ const { t } = useI18n();
                 <template v-slot>
                     <div class="p-6 max-w-md mx-auto dark:text-white">
                         <h2 class="text-lg font-bold mb-4 text-center">{{ t('confirm_action') }}</h2>
-                        <p class="text-center">{{ t('ask_confirm_remove') }}</p>
+                        <p class="text-center">{{ t('ask_role_to_delete') }}</p>
                         <div class="mt-4 flex flex-wrap justify-center gap-2">
                             <button
                                 @click="showRemoveModal = false"

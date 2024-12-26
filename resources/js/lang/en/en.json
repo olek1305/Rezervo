@@ -135,7 +135,6 @@
     "enter_name_or_email": "Enter name or email",
     "role_assigned": "Doctor role has been assigned.",
     "role_removed": "Doctor role has been removed.",
-    "ask_confirm_remove": "Are you sure you want to remove the Doctor role?",
     "system_title": "Reservation System",
     "system_welcome": "Welcome to the reservation system!",
     "start_now": "Start now",
